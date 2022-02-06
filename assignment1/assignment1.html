@@ -65,7 +65,29 @@
 	<div>
 		<h2>Subscribe to my newsletter.
 		</h2>
-
+		<form action='#' method='post'>
+			<label>Name:</label> <input type="text" name='name' id='the_name'><br />
+			<br />
+			Age: <input type="number">
+			<br />
+			Fav color (pick one):
+			<input type="radio" name="color" value="blue">Blue
+			<input type="radio" name="color" value="red">Red
+			<input type="radio" name="color" value="purple">Purple
+			<br />
+			Fav color (drop down list):
+			<select name="favColor">
+				<option value="blue">Blue</option>
+				<option value="red">Red</option>
+				<option value="purple">Purple</option>
+			</select>
+			<br />
+			Fav snacks (pick all that apply):
+			<input type="checkbox" name="chkPotChip" value="potato_chip">Potato Chips
+			<input type="checkbox" name="chkPretzel" value="pretzels">Pretzels
+			<input type="checkbox" name="chkPopcorn" value="popcorn">Popcorn
+			<br />
+			<input type="button" value="Go!">
 	</div>
 	<p></p>
 	<!--
