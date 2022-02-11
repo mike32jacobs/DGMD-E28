@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <title>Example #3</title>
+    <meta charset='utf-8'>
+    <link href=data: , rel=icon>
+    <style>
+        body,
+        html {
+            font-size: 30px;
+        }
+
+        #myButton {
+            border: 8px solid #000;
+            padding: 15px;
+            width: 100px;
+            text-align: center;
+        }
+
+        #button-1-id {
+            border: 2px solid #000;
+            padding: 15px;
+            width: 100px;
+            text-align: center;
+        }
+
+        #result {
+            font-size: 19px;
+            margin-top: 20px;
+        }
+
+        #userInput {
+            font-size: 19px;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            for (i = 1; i <= 3; i++)
+                document.querySelector(".btn" + i).addEventListener("click", showNumber);
+            btn = document.getElementById("button-1-id");
+            btn.addEventListener("click", function () {
+                result = document.getElementById("result");
+                result.innerHTML = "Content: " + this.innerText
+                    + "<br />Class " + this.className
+                    + "<br />Name " + this.getAttribute("name")
+                    + "<br />ID " + this.id;
+            }) // end button click
+        }
+
+        // end window onload
+
+        function showNumber() {
+            result = document.getElementById("result");
+            theClass = this.className;
+            index = theClass.indexOf("btn") + 3;
+            number = parseInt(theClass.substring(index));
+            result.innerHTML = this.className + "<br />" + number * 2;
+        }
+
+    </script>
+</head>
+<h1>Welcome to example #3.</h1>
+<p>These examples are class lecture activities that we did in week 3.</p>
+
+<body>
+    <h2>Week 3 Notes and Examples</h2>
+    <div>Solve with a for loop: Count down from 40 by two's. Teacher Solution.
+        <p id="count"></p>
+
+        <script language="javascript">
+
+            for (let i = 40; i > 10; i -= 2) {
+                document.write(i + "<br />");
+            }
+        </script>
+    </div>
+
+    <div>Student Solution: Solve with a for loop: Count down from 40 by two's.
+        <p id="count"></p>
+
+        <script>
+            for (let i = 40; i > 0; i = i - 2) {
+                document.write(i);
+                document.write("\n");
+
+            }
+        </script>
+    </div>
+    <div>Solve with a while loop: Count down from 40 by two's.
+        <p id="count"></p>
+
+        <script>
+            let count = 40;
+            while (count > 0) {
+                document.write(count);
+                document.write("\n");
+                count = count - 2;
+            }
+
+        </script>
+    </div>
+    <div><input type='text' id='my-input'></div>
+    <script>data = document.getElementById('my-input').value;
+        document.write(data);
+
+    </script>
+    <div class="myButton" id="myButton" name="myButton">myButton</div>
+    <div id="userInput"></div>
+    <br />
+
+    <div class="button-1" id="button-1-id" name="button-1-name">Press Me</div>
+    <div id="result"></div>
+
+    <div class="theButton btn1">Press Me</div>
+    <div class="theButton btn2">Press Me</div>
+    <div class="theButton btn3">Press Me</div>
+    <div id="result"></div>
+
+
+</body>
+
+</html>
