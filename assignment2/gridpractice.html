@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <title>grid practice</title>
+    <meta charset='utf-8'>
+    <link href=data: , rel=icon>
+    <style>
+        body,
+        html {
+            font-size: 30px;
+        }
+
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            width: 40%;
+        }
+
+        /* .move {
+            margin: auto;
+            width: 60%;
+            border: 5px solid #e218c7;
+            padding: 10px;
+        } */
+
+        .game-board {
+            margin: auto;
+            width: 60%;
+            border: 5px solid #0f7a06;
+            padding: 10px;
+        }
+
+        .grid {
+            display: flex;
+            /* establish flex container */
+            flex-wrap: wrap;
+            /* enable flex items to wrap */
+            justify-content: space-around;
+            width: 100%;
+
+        }
+
+        .cell {
+            flex: 0 0 32%;
+            /* don't grow, don't shrink, width */
+            height: 50px;
+            margin-bottom: 5px;
+            background-color: #999;
+        }
+    </style>
+    <!-- <script>
+        window.onload = function () {
+            for (i = 1; i <= 3; i++)
+                document.querySelector(".btn" + i).addEventListener("click", showNumber);
+        } // end window onload
+
+        function showNumber() {
+            result = document.getElementById("result");
+            theClass = this.className;
+            index = theClass.indexOf("btn") + 3;
+            number = parseInt(theClass.substring(index));
+            result.innerHTML = this.className + "<br />" + number * 2;
+        }
+    </script> -->
+</head>
+
+<body>
+    <h1>Practice with grids </h1>
+    <h2>By Michael Jacobs</h2>
+    <h3>This is a way for me to try grid setups</h3>
+    <hr>
+    <h3>Attempt #1</h3>
+    <p>description ...</p>
+
+    <div class="game-grid">
+        <div class="row" id="row1">
+
+            <div class="col" id="row1-col1">1</div>
+            <div class="col" id="row1-col2">2</div>
+            <div class="col" id="row1-col3">3</div>
+        </div>
+
+        <div class="row" id="row2">
+            <div class="col" id="row2-col1">4</div>
+            <div class="col" id="row2-col2">5</div>
+            <div class="col" id="row2-col3">6</div>
+        </div>
+
+        <div class="row" id="row3">
+
+            <div class="col" id="row3-col1">7</div>
+            <div class="col" id="row3-col2">8</div>
+            <div class="col" id="row3-col3">9</div>
+        </div>
+    </div>
+    <hr>
+    <h3>Attempt #2</h3>
+    <p>I got this from <a
+            href="https://stackoverflow.com/questions/37502266/how-do-i-create-a-3x3-grid-via-css/46260247">stack
+            overflow: </a></p>
+    <div class="grid">
+        <div class="cell">1</div>
+        <div class="cell">2</div>
+        <div class="cell">3</div>
+        <div class="cell">4</div>
+        <div class="cell">5</div>
+        <div class="cell">6</div>
+        <div class="cell">7</div>
+        <div class="cell">8</div>
+        <div class="cell">9</div>
+    </div>
+    <hr>
+    <h3>Attempt #3</h3>
+    <div class="game-board">
+        <div class="grid">
+            <div class="cell"><img src="/images/x.png" alt="x" class="o"></div>
+            <div class="cell">2</div>
+            <div class="cell">3</div>
+            <div class="cell">4</div>
+            <div class="cell"><img src="/images/o.png" alt="x" class="move" class="o"></div>
+            <div class="cell">6</div>
+            <div class="cell">7</div>
+            <div class="cell">8</div>
+            <div class="cell">9</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
