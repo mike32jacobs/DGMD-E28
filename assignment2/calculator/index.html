@@ -23,7 +23,7 @@
             box-sizing: border-box; 
             color: #fff;
         }
-        c-button.op{
+        .c-button.op{
             width: 60px; 
             height: 52px;
             padding-top: 2px;
@@ -46,7 +46,7 @@
             box-sizing: border-box;
 
         }
-        .c-contatiner{
+        .c-container{
             border: 1px solid#000;
             padding: 10px;
             text-align: center;
@@ -55,19 +55,64 @@
         }
             
 
-        body,
+        /* body,
         html {
             font-size: 30px;
-        }
+        } */
     </style>
     <script language="javascript">
+        window.onload = function () {
+            buttons = document.querySelectorAll(".c-button");
+            console.log(buttons);
+            buttons.forEach(function (item) {
+                item.addEventListener("click", pressButton);
+            }) // end buttons for each
+        }// end Window onload
+
+        var op1 = 0, op2 = 0, operator;
+        add = (a, b) => a + b;
+        subtract = (a, b) => a - b;
+        multiply = (a, b) => a * b;
+        divide = (a, b) => a / b;
+
+        function pressButton() {
+            btnValue = this.innerText;
+            if (!isNaN(btnValue)) //It is a number
+            {
+                result = document.getElementById("result");
+                result.innerHTML += btnValue;
+            }
+            else //operator button
+            {
+                if (btnValue == 'c') {
+                    result.innerHTML = "";
+                }
+                else if (btnValue == '=') {
+                    op2 = parseInt(result.innerText);
+                    result.innerHTML = "";
+
+                }
+                else // It is an operator
+                {
+                    op1 = parseInt(result.innerText);
+                    result.innerHTML = "";
+                    ops = ['+', '-', 'x', '/'];
+                    functions = [add, subtract, multiply, divide];
+                    index = ops.indexOf(btnValue);
+                    alert(index);
+                }
+
+                // alert("not a number button")
+            }
+        }
+
         function makeButtons() {
             var btnString = "";
             var btnNum = 9;
-            for (let i = 1; i < 4; i++) {
+            for (let i = 1; i <= 4; i++) {
                 let btns = "";
                 for (let j = 1; j <= 3 && btnNum >= 0; j++) {
-                    btns = "<div class='c-button num'>" + btnNum-- + "</div>";
+                    btns = "<div class='c-button num'>" + btnNum-- + "</div>" + btns;
                 }
                 btnString += btns + "<br />";
             }
@@ -76,22 +121,18 @@
         function makeOps() {
             var btns = "";
             ops = ['+', '-', 'x', '/', 'c', '='];
-            ops.foreach(function (item) {
+            ops.forEach(function (item) {
                 btns += "<div class='c-button op'>" + item + "</div>";
             })
             document.write(btns);
         }
-
-
-
-
     </script>
 </head>
 
 
 <body>
     <h1>Calculator Demo.</h1>
-    <div class="c-container">
+    <div class='c-container'>
         <div class="c-result" id="result">&nbsp</div>
 
         <script language="javascript">
