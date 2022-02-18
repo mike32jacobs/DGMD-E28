@@ -2,7 +2,7 @@
 <html lang='en'>
 
 <head>
-    <title>Calculator Demo</title>
+    <title>Tic Tac Toe Draft</title>
     <meta charset='utf-8'>
     <link href=data: , rel=icon>
     <style type="" text/css">
@@ -23,7 +23,7 @@
             box-sizing: border-box; 
             color: #fff;
         }
-        .c-button.op{
+        .c-button-x  .c-button-o{
             width: 60px; 
             height: 52px;
             padding-top: 2px;
@@ -31,6 +31,15 @@
             background-color: #709E67;
             font-weight: 500;
         }
+        .c-button.num1:after {
+            content:"X";
+            background-color: #709E67;
+
+        }
+        .c-button.num2 {
+            background-image: url(/images/o.svg);
+        }
+
         .c-button:hover {
             background-color: #606060;
         }
@@ -111,38 +120,39 @@
 
         function makeButtons() {
             var btnString = "";
-            var btnNum = 9;
-            for (let i = 1; i <= 4; i++) {
+            var btnNum = 1;
+            for (let i = 1; i <= 3; i++) {
                 let btns = "";
-                for (let j = 1; j <= 3 && btnNum >= 0; j++) {
-                    btns = "<div class='c-button num'>" + btnNum-- + "</div>" + btns;
+                for (let j = 1; j <= 3; j++) {
+                    btns = "<div class='c-button num" + btnNum + "' id='row" + i + "col" + j + "'>" + btnNum++ + "</div>";
+                    btnString += btns;
+                    console.log(btns);
                 }
-                btnString += btns + "<br />";
+                btnString += "<br />";
+                console.log(btnString);
             }
             document.write(btnString);
         }
-        function makeOps() {
-            var btns = "";
-            ops = ['+', '-', 'x', '/', 'c', '='];
-            ops.forEach(function (item) {
-                btns += "<div class='c-button op'>" + item + "</div>";
-            })
-            document.write(btns);
-        }
+
     </script>
 </head>
 
 
 <body>
-    <h1>Calculator Demo.</h1>
+    <h1>tictactoedraft</h1>
     <div class='c-container'>
         <div class="c-result" id="result">&nbsp</div>
 
         <script language="javascript">
             makeButtons();
-            makeOps();
         </script>
     </div> <!-- End c-container-->
+    <div class='c-container'>
+
+        <div class="c-button-x"></div>
+        <div class="c-button-o"></div>
+    </div>
+
     <ul>
 
 
