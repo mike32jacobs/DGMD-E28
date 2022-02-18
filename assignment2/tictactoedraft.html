@@ -78,44 +78,38 @@
             }) // end buttons for each
         }// end Window onload
 
-        var op1 = 0, op2 = 0, operator;
-        add = (a, b) => a + b;
-        subtract = (a, b) => a - b;
-        multiply = (a, b) => a * b;
-        divide = (a, b) => a / b;
+        var moves = [];
+        var playerTurn = 'x';
+        var gameOver = false;
 
         function pressButton() {
-            btnValue = this.innerText;
-            if (!isNaN(btnValue)) //It is a number
-            {
-                result = document.getElementById("result");
-                result.innerHTML += btnValue;
+            buttonId = this.id;
+            buttonNumber = parseInt(this.innerHTML); //This will return a number between 1 and 9.
+
+            moves[buttonNumber] = playerTurn;
+            checkResult();
+            console.log("now it is " + playerTurn);
+            togglePlayer();
+
+            console.log("up next is " + playerTurn);
+            console.log(moves);
+        }
+
+        function togglePlayer() {
+            if (playerTurn == 'x') {
+                playerTurn = 'o';
             }
-            else //operator button
-            {
-                if (btnValue == 'c') {
-                    result.innerHTML = "";
-                }
-                else if (btnValue == '=') {
-
-                    op2 = parseInt(result.innerText);
-                    result.innerHTML = operator(op1, op2);
-                    // op1 = op2;
-
-
-                }
-                else // It is an operator
-                {
-                    op1 = parseInt(result.innerText);
-                    result.innerHTML = "";
-                    ops = ['+', '-', 'x', '/'];
-                    functions = [add, subtract, multiply, divide];
-                    index = ops.indexOf(btnValue);
-                    operator = functions[index];
-                }
-
-                // alert("not a number button")
+            else {
+                playerTurn = 'x';
             }
+        }
+
+        function checkResult() {
+            gameOver = ((moves[1] == moves[2]) && (moves[1] == moves[3]));
+            console.log(gameOver);
+            // gameOver = true;
+            // alert("we have a winner " + playerTurn);
+
         }
 
         function makeButtons() {
@@ -124,7 +118,8 @@
             for (let i = 1; i <= 3; i++) {
                 let btns = "";
                 for (let j = 1; j <= 3; j++) {
-                    btns = "<div class='c-button num" + btnNum + "' id='row" + i + "col" + j + "'>" + btnNum++ + "</div>";
+                    btns = "<div class='c-button num" + btnNum + "' id='row" + i + "col" + j + "'></div>";
+                    btnNum++;
                     btnString += btns;
                     console.log(btns);
                 }
