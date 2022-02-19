@@ -77,7 +77,6 @@
     <script language="javascript">
         window.onload = function () {
             buttons = document.querySelectorAll(".c-button");
-            console.log(buttons);
             buttons.forEach(function (item) {
                 item.addEventListener("click", pressButton);
             }) // end buttons for each
@@ -88,25 +87,34 @@
         var gameOver = false;
 
         function pressButton() {
-            buttonId = this.id;
-            buttonNumber = parseInt(this.id); // This will return a number between 1 and 9.
-
-            // Check to see if this button is available
-            buttonText = this.innerHTML;
-            if ((buttonText == 'x') || (buttonText == 'o')) {
-                alert("This space is taken. Try an open space.")
+            if (gameOver) {
+                message = "Why are you still trying? Game Over. The winner is " + playerTurn;
+                return alert(message);
             } else {
-                moves[buttonNumber] = playerTurn; // Store the move in an array
-                this.innerHTML = playerTurn; // Display the text of the move
-                newClass = playerTurn;
-                // console.log(newClass)
-                this.className += newClass;
+                buttonId = this.id;
+                buttonNumber = parseInt(this.id); // This will return a number between 1 and 9.
 
-                checkResult();
-                console.log("now it is " + playerTurn);
-                togglePlayer();
-                console.log("up next is " + playerTurn);
-                console.log(moves);
+                // Check to see if this button is available
+                buttonText = this.innerHTML;
+                if ((buttonText == 'x') || (buttonText == 'o')) {
+                    alert("This space is taken. Try an open space.")
+                } else {
+                    moves[buttonNumber] = playerTurn; // Store the move in an array
+                    this.innerHTML = playerTurn; // Display the text of the move
+                    newClass = playerTurn;
+                    // console.log(newClass)
+                    this.className += newClass;
+
+                    checkResult(playerTurn);
+                    if (gameOver) {
+                        message = "Game Over. The winner is " + playerTurn;
+                        return alert(message);
+                    } else {
+                        togglePlayer();
+                    }
+
+                }
+
             }
 
 
@@ -121,11 +129,37 @@
             }
         }
 
-        function checkResult() {
-            gameOver = ((moves[1] == moves[2]) && (moves[1] == moves[3]));
-            console.log(gameOver);
-            // gameOver = true;
-            // alert("we have a winner " + playerTurn);
+        function checkResult(move) {
+            // If there are three in a row, game is over.
+            if ((moves[1] == move) && (moves[2] == move) && (moves[3] == move))/// top row
+            {
+                gameOver = true;
+            } else if ((moves[4] == move) && (moves[5] == move) && (moves[6] == move)) // middle row
+            {
+                gameOver = true;
+            } else if ((moves[7] == move) && (moves[8] == move) && (moves[9] == move)) // bottom row
+            {
+                gameOver = true;
+            } else if ((moves[1] == move) && (moves[4] == move) && (moves[7] == move)) // left column
+            {
+                gameOver = true;
+            } else if ((moves[2] == move) && (moves[5] == move) && (moves[8] == move)) // middle column
+            {
+                gameOver = true;
+            } else if ((moves[3] == move) && (moves[6] == move) && (moves[9] == move)) // right column
+            {
+                gameOver = true;
+            } else if ((moves[1] == move) && (moves[5] == move) && (moves[9] == move)) // diagonal 1
+            {
+                gameOver = true;
+            } else if ((moves[3] == move) && (moves[5] == move) && (moves[7] == move)) // diagonal 2
+            {
+                gameOver = true;
+            }
+            // gameOver = ((moves[1] == moves[2]) && (moves[1] == moves[3]));
+            console.log("Is the game Over?" + gameOver);
+
+
 
         }
 
@@ -138,10 +172,8 @@
                     btns = "<div class='c-button' id='" + btnNum + "''> </div>";
                     btnNum++;
                     btnString += btns;
-                    console.log(btns);
                 }
                 btnString += "<br />";
-                console.log(btnString);
             }
             document.write(btnString);
         }
@@ -153,17 +185,20 @@
 <body>
     <h1>tictactoedraft</h1>
     <div class='c-container'>
-        <div class="c-result" id="result">&nbsp</div>
+        <div class="message" id="result">
+            <script language="javascript">
+
+                if (gameOver) {
+                    document.write("The Winner Is: " + playerTurn);
+                }
+            </script>
+            &nbsp
+        </div>
 
         <script language="javascript">
             makeButtons();
         </script>
     </div> <!-- End c-container-->
-    <div class='c-container'>
-
-        <div class="c-button-x"></div>
-        <div class="c-button-o"></div>
-    </div>
 
     <ul>
 
