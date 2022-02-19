@@ -5,24 +5,73 @@
     <title>Tic Tac Toe</title>
     <meta charset='utf-8'>
     <link href=data: , rel=icon>
-    <style>
-        body,
-        html {
+    <style type="" text/css">
+        h2{
+            text-align: center; 
             font-size: 30px;
         }
 
-        #button-1-id {
-            border: 2px solid #000;
-            padding: 15px;
-            width: 100px;
+        .c-button{
+            width: 80px; 
+            height: 70px;
+            background-color: #428DC6;
+            padding: 12px 7px 7px 7px; 
+            margin: 4px 5px; 
+            display: inline-block; 
+            font-size: 40px;
+            font-weight: 700; 
+            box-sizing: border-box; 
+            color: #fff;
+        }
+        .c-buttonx, .c-buttono {
+            width: 80px; 
+            height: 70px;
+            padding: 12px 7px 7px 7px; 
+            margin: 4px 5px; 
+            display: inline-block; 
+            font-size: 40px;
+            font-weight: 700; 
+            box-sizing: border-box; 
+            color: #fff;
+        }
+        .c-buttonx{
+            background-color: #9a22a5;
+        }
+        .c-buttono{
+            background-color: #22a543;
+        }
+        
+        /* .c-button.num1:after {
+            content:"X";
+            background-color: #709E67;
+
+        }
+        .c-button.num2 {
+            background-image: url(/images/o.svg);
+        } */
+
+        .c-button:hover {
+            background-color: #606060;
+        }
+        .c-result{
+            width: 80%;
+            border: 1px solid #000;
+            margin: 2px auto;
+            height:44px;
+            font-size: 30px;
+            font-family: Gotham, "Helvetica Neue", Arial, Helvetica, sans-serif;
+            text-align: right;
+            padding: 3px 6px;
+            box-sizing: border-box;
+
+        }
+        .c-container{
+            border: 1px solid#000;
+            padding: 10px;
             text-align: center;
+            width: 300px;
+            margin: 0 auto;
         }
-
-        #result {
-            font-size: 19px;
-            margin-top: 20px;
-        }
-
         div.polaroid {
             width: 40%;
             background-color: white;
@@ -39,19 +88,109 @@
 
         }
     </style>
-    <script>
+    <script language="javascript">
         window.onload = function () {
-            for (i = 1; i <= 3; i++)
-                document.querySelector(".btn" + i).addEventListener("click", showNumber);
-        } // end window onload
+            buttons = document.querySelectorAll(".c-button");
+            buttons.forEach(function (item) {
+                item.addEventListener("click", pressButton);
+            }) // end buttons for each
+        }// end Window onload
 
-        function showNumber() {
-            result = document.getElementById("result");
-            theClass = this.className;
-            index = theClass.indexOf("btn") + 3;
-            number = parseInt(theClass.substring(index));
-            result.innerHTML = this.className + "<br />" + number * 2;
+        var moves = [];
+        var playerTurn = 'x';
+        var gameOver = false;
+
+        function pressButton() {
+            if (gameOver) {
+                message = "Why are you still trying? Game Over. The winner is " + playerTurn;
+                return alert(message);
+            } else {
+                buttonId = this.id;
+                buttonNumber = parseInt(this.id); // This will return a number between 1 and 9.
+
+                // Check to see if this button is available
+                buttonText = this.innerHTML;
+                if ((buttonText == 'x') || (buttonText == 'o')) {
+                    alert("This space is taken. Try an open space.")
+                } else {
+                    moves[buttonNumber] = playerTurn; // Store the move in an array
+                    this.innerHTML = playerTurn; // Display the text of the move
+                    newClass = playerTurn;
+                    this.className += newClass;
+
+                    checkResult(playerTurn);
+                    if (gameOver) {
+                        message = "Game Over. The winner is " + playerTurn;
+                        return alert(message);
+                    } else {
+                        togglePlayer();
+                    }
+
+                }
+
+            }
+
+
         }
+
+        function togglePlayer() {
+            if (playerTurn == 'x') {
+                playerTurn = 'o';
+            }
+            else {
+                playerTurn = 'x';
+            }
+        }
+
+        function checkResult(move) {
+            // If there are three in a row, game is over.
+            if ((moves[1] == move) && (moves[2] == move) && (moves[3] == move))/// top row
+            {
+                gameOver = true;
+            } else if ((moves[4] == move) && (moves[5] == move) && (moves[6] == move)) // middle row
+            {
+                gameOver = true;
+            } else if ((moves[7] == move) && (moves[8] == move) && (moves[9] == move)) // bottom row
+            {
+                gameOver = true;
+            } else if ((moves[1] == move) && (moves[4] == move) && (moves[7] == move)) // left column
+            {
+                gameOver = true;
+            } else if ((moves[2] == move) && (moves[5] == move) && (moves[8] == move)) // middle column
+            {
+                gameOver = true;
+            } else if ((moves[3] == move) && (moves[6] == move) && (moves[9] == move)) // right column
+            {
+                gameOver = true;
+            } else if ((moves[1] == move) && (moves[5] == move) && (moves[9] == move)) // diagonal 1
+            {
+                gameOver = true;
+            } else if ((moves[3] == move) && (moves[5] == move) && (moves[7] == move)) // diagonal 2
+            {
+                gameOver = true;
+            }
+            // gameOver = ((moves[1] == moves[2]) && (moves[1] == moves[3]));
+            console.log("Is the game Over?" + gameOver);
+
+
+
+        }
+
+        function makeButtons() {
+            var btnString = "";
+            var btnNum = 1;
+            for (let i = 1; i <= 3; i++) {
+                let btns = "";
+                for (let j = 1; j <= 3; j++) {
+                    btns = "<div class='c-button' id='" + btnNum + "''> </div>";
+                    btnNum++;
+                    btnString += btns;
+                }
+                btnString += "<br />";
+            }
+            document.write(btnString);
+        }
+
     </script>
 </head>
 
@@ -64,24 +203,22 @@
             <p>War Games</p>
         </div>
     </div>
-    <div class="game-grid"></div>
-    <div class="row" id="row1"></div>
+    <div class='c-container'>
+        <div class="message" id="result">
+            <script language="javascript">
 
-    <div class="col" id="row1-col1">1</div>
-    <div class="col" id="row1-col2">2</div>
-    <div class="col" id="row1-col3">3</div>
+                if (gameOver) {
+                    document.write("The Winner Is: " + playerTurn);
+                }
+            </script>
+            &nbsp
+        </div>
 
+        <script language="javascript">
+            makeButtons();
+        </script>
+    </div> <!-- End c-container-->
 
-    <div class="row" id="row2"></div>
-    <div class="col" id="row2-col1">4</div>
-    <div class="col" id="row2-col2">5</div>
-    <div class="col" id="row2-col3">6</div>
-
-    <div class="row" id="row3"></div>
-
-    <div class="col" id="row3-col1">7</div>
-    <div class="col" id="row3-col2">8</div>
-    <div class="col" id="row3-col3">9</div>
 
 
 </body>
