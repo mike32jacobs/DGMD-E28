@@ -108,8 +108,12 @@
                     this.className += newClass;
 
                     checkResult(playerTurn);
-                    if (gameOver) {
+                    if (gameOver && !(winner == 'nobody')) {
                         message = "Game Over. The winner is " + winner + ".";
+                        item = document.getElementById('message');
+                        item.innerHTML = message;
+                    } else if (gameOver && (winner == 'nobody')) {
+                        message = "Game Over. Draw. There is no winner.";
                         item = document.getElementById('message');
                         item.innerHTML = message;
                     } else {
@@ -146,17 +150,10 @@
                 //There are no available spaces. 
                 spacesAvailable = false;
             }
-            console.log(moves);
-            console.log(!moves.includes(undefined));
-            console.log("SpacesAvailable" + spacesAvailable);
         }
 
         function checkResult(move) {
-
-            // Check for a draw
-            console.log("moves[0]" + moves[0]);
-
-            // If there are three in a row, game is over.
+            // If there are three in a row, game is over. 
             if ((moves[1] == move) && (moves[2] == move) && (moves[3] == move))/// top row
             {
                 gameOver = true;
@@ -194,7 +191,6 @@
                 if (!spacesAvailable) {
                     gameOver = true;
                     winner = 'nobody';
-                    console.log("mark 1: Spaces Available?" + spacesAvailable);
                 }
             }
         }
