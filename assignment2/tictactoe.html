@@ -8,7 +8,7 @@
     <style type="" text/css">
         h2{
             text-align: center; 
-            font-size: 30px;
+            font-size: 40px;
         }
 
         .c-button{
@@ -78,9 +78,14 @@
             }) // end buttons for each
         }// end Window onload
 
-        var moves = [];
+        var moves = new Array(10);
+        moves[0] = ['hack'];
+        // The previous two lines were hacks to try to get some of my funtions working. In my code, I had each space numbered, 1-9. If I had done it better, I would have numbered each space 0-8. If I have time to fix this before I submit, then I will.
+
         var playerTurn = 'x';
+        var spacesAvailable = true;
         var gameOver = false;
+        var draw = false;
         var winner;
 
         function pressButton() {
@@ -113,12 +118,8 @@
                         item = document.getElementById('message');
                         item.innerHTML = message;
                     }
-
                 }
-
             }
-
-
         }
 
         function togglePlayer() {
@@ -130,41 +131,72 @@
             }
         }
 
+        function checkAvailableSpaces() {
+            // Loop through the moves array and check for undefined
+
+
+
+            // for (let i = 1; i <= 9; i++) {
+            //     if (moves[i] == null) {
+            //         // No Spaces available
+            //         spacesAvailable = false;
+            //     }
+            // }
+            if (!moves.includes(undefined)) {
+                //There are no available spaces. 
+                spacesAvailable = false;
+            }
+            console.log(moves);
+            console.log(!moves.includes(undefined));
+            console.log("SpacesAvailable" + spacesAvailable);
+        }
+
         function checkResult(move) {
+
+            // Check for a draw
+            console.log("moves[0]" + moves[0]);
+
             // If there are three in a row, game is over.
             if ((moves[1] == move) && (moves[2] == move) && (moves[3] == move))/// top row
             {
                 gameOver = true;
+                winner = playerTurn;
             } else if ((moves[4] == move) && (moves[5] == move) && (moves[6] == move)) // middle row
             {
                 gameOver = true;
+                winner = playerTurn;
             } else if ((moves[7] == move) && (moves[8] == move) && (moves[9] == move)) // bottom row
             {
                 gameOver = true;
+                winner = playerTurn;
             } else if ((moves[1] == move) && (moves[4] == move) && (moves[7] == move)) // left column
             {
                 gameOver = true;
+                winner = playerTurn;
             } else if ((moves[2] == move) && (moves[5] == move) && (moves[8] == move)) // middle column
             {
                 gameOver = true;
+                winner = playerTurn;
             } else if ((moves[3] == move) && (moves[6] == move) && (moves[9] == move)) // right column
             {
                 gameOver = true;
+                winner = playerTurn;
             } else if ((moves[1] == move) && (moves[5] == move) && (moves[9] == move)) // diagonal 1
             {
                 gameOver = true;
+                winner = playerTurn;
             } else if ((moves[3] == move) && (moves[5] == move) && (moves[7] == move)) // diagonal 2
             {
                 gameOver = true;
-            }
-            // gameOver = ((moves[1] == moves[2]) && (moves[1] == moves[3]));
-            console.log("Is the game Over?" + gameOver);
-
-            // Set the winner to the current player
-            if (gameOver)
                 winner = playerTurn;
-
-
+            } else { // There is no 3 in a row. Check for a draw. If there are no empty spaces, then the game is a draw.
+                checkAvailableSpaces();
+                if (!spacesAvailable) {
+                    gameOver = true;
+                    winner = 'nobody';
+                    console.log("mark 1: Spaces Available?" + spacesAvailable);
+                }
+            }
         }
 
         function makeButtons() {
@@ -187,15 +219,14 @@
 
 <body>
 
-    <div class="c-container"><img src="/images/wargames.png" alt="Shall We Play A Game" style="width:100%">
-        <div class="c-container">
-            <h1>Tic Tac Toe </h1>
-            <h2>By Michael Jacobs</h2>
-            <h3>Assignment #2</h3>
-        </div>
-    </div>
+    <div class="c-container"><img src="/images/wargames.png" alt="Shall We Play A Game" style="width:100%"></div>
+    <!-- End c-container-->
+    <div class="c-container">
+        <h1>Tic Tac Toe </h1>
+        <h2>By Michael Jacobs</h2>
+        <h3>Assignment #2</h3>
+    </div> <!-- End c-container-->
     <div class='c-container'>
-
         <script language="javascript">
             makeButtons();
         </script>
@@ -203,12 +234,6 @@
     <div class='c-container'>
         <div id="result">
             <h2 id="message">Player x will go first.</h2>
-            <script language="javascript">
-
-                if (gameOver) {
-                    document.write("The Winner Is: " + playerTurn);
-                }
-            </script>
         </div>
 
     </div><!-- End c-container-->
