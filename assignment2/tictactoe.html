@@ -41,19 +41,11 @@
             background-color: #22a543;
         }
         
-        /* .c-button.num1:after {
-            content:"X";
-            background-color: #709E67;
-
-        }
-        .c-button.num2 {
-            background-image: url(/images/o.svg);
-        } */
 
         .c-button:hover {
             background-color: #606060;
         }
-        .c-result{
+        /* .c-result{
             width: 80%;
             border: 1px solid #000;
             margin: 2px auto;
@@ -64,24 +56,14 @@
             padding: 3px 6px;
             box-sizing: border-box;
 
-        }
+        } */
         .c-container{
             border: 1px solid#000;
             padding: 10px;
             text-align: center;
-            width: 300px;
+            width: 60%;
             margin: 0 auto;
         }
-        div.polaroid {
-            width: 40%;
-            background-color: white;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            margin-bottom: 25px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto
-        }
-
         div.container {
             text-align: center;
             padding: 10px 20px;
@@ -99,11 +81,13 @@
         var moves = [];
         var playerTurn = 'x';
         var gameOver = false;
+        var winner;
 
         function pressButton() {
             if (gameOver) {
-                message = "Why are you still trying? Game Over. The winner is " + playerTurn;
-                return alert(message);
+                message = "Why are you still trying? Game Over. The winner is " + winner + ".";
+                item = document.getElementById('message');
+                item.innerHTML = message;
             } else {
                 buttonId = this.id;
                 buttonNumber = parseInt(this.id); // This will return a number between 1 and 9.
@@ -120,10 +104,14 @@
 
                     checkResult(playerTurn);
                     if (gameOver) {
-                        message = "Game Over. The winner is " + playerTurn;
-                        return alert(message);
+                        message = "Game Over. The winner is " + winner + ".";
+                        item = document.getElementById('message');
+                        item.innerHTML = message;
                     } else {
                         togglePlayer();
+                        message = "Now it is " + playerTurn + "'s turn.";
+                        item = document.getElementById('message');
+                        item.innerHTML = message;
                     }
 
                 }
@@ -172,6 +160,9 @@
             // gameOver = ((moves[1] == moves[2]) && (moves[1] == moves[3]));
             console.log("Is the game Over?" + gameOver);
 
+            // Set the winner to the current player
+            if (gameOver)
+                winner = playerTurn;
 
 
         }
@@ -195,29 +186,32 @@
 </head>
 
 <body>
-    <h1>Tic Tac Toe </h1>
-    <h2>By Michael Jacobs</h2>
-    <h3>Assignment #2</h3>
-    <div class="polaroid"><img src="/images/wargames.png" alt="Shall We Play A Game" style="width:100%">
-        <div class="container">
-            <p>War Games</p>
+
+    <div class="c-container"><img src="/images/wargames.png" alt="Shall We Play A Game" style="width:100%">
+        <div class="c-container">
+            <h1>Tic Tac Toe </h1>
+            <h2>By Michael Jacobs</h2>
+            <h3>Assignment #2</h3>
         </div>
     </div>
     <div class='c-container'>
-        <div class="message" id="result">
+
+        <script language="javascript">
+            makeButtons();
+        </script>
+    </div> <!-- End c-container-->
+    <div class='c-container'>
+        <div id="result">
+            <h2 id="message">Player x will go first.</h2>
             <script language="javascript">
 
                 if (gameOver) {
                     document.write("The Winner Is: " + playerTurn);
                 }
             </script>
-            &nbsp
         </div>
 
-        <script language="javascript">
-            makeButtons();
-        </script>
-    </div> <!-- End c-container-->
+    </div><!-- End c-container-->
 
 
 
