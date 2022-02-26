@@ -43,7 +43,7 @@
             height:44px;
             font-size: 30px;
             font-family: Gotham, "Helvetica Neue", Arial, Helvetica, sans-serif;
-            text-align: right;
+            text-align: left;
             padding: 3px 6px;
             box-sizing: border-box;
 
@@ -62,6 +62,26 @@
         }
 
     </style>
+    <script language="javascript">
+        window.onload = function () {
+            buttons = document.querySelectorAll(".quantity");
+            console.log(buttons);
+            buttons.forEach(function (item) {
+                item.addEventListener("click", pressButton);
+            }) // end buttons for each
+        }// end Window onload
+
+        function addOne() {
+            console.log("you just pushed the button");
+            console.log(this.id);
+
+            let quantity = parseInt(this.innerText)
+            console.log("oldQuantity" + quantity);
+            quantity++;
+            this.innerHTML = quantity;
+
+        }
+    </script>
 
 </head>
 
@@ -71,6 +91,7 @@
         <li>Go to <a href="assignment3.html" target="_blank">Assignment 3 Index</a></li>
     </ul>
     <div class="container">
+
         <div class="jumbotron">
             <h1 class="title">Joe's Hot Dogs</h1>
             <p>Assignment #3 Task #1 Array: By Michael Jacobs</p>
@@ -79,14 +100,29 @@
 
     <div class='c-menu'>
         <div class='c-container'>
+            <div class="item">Hot Dog</div>
+            <div class="price">$4.00</div>
+            <div class="quantity" id="hd-quantity">3</div><br />
+            <div class="item">Fries</div>
+            <div class="price">$3.50</div>
+            <div class="quantity" id="fries-quantity">3</div><br />
+            <div class="item">Soda</div>
+            <div class="price">$1.50</div>
+            <div class="quantity" id="soda-quantity">3</div><br />
+            <div>
+                <div class="item">Sauerkraut</div>
+                <div class="price">$1.00</div>
+                <div class="addButton">+</div>
+                <div class="subtractButton">-</div>
+                <div class="quantity" id="sauer-quantity">0</div><br />
+            </div>
 
-            <div class="c-total" id="c-total">&nbsp</div>
-            <h2>Total</h2>
+            <div class="c-total" id="c-total">Total: </div>
+            <h2></h2>
         </div><!-- End c-container-->
 
         <script language="javascript">
             // makeButtons();
-            makeOps();
         </script>
     </div> <!-- End c-container-->
 
