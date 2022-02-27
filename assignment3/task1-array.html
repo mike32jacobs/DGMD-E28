@@ -12,29 +12,49 @@
             text-align: center; 
             font-size: 30px;
         }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            grid-template-rows: 2fr 1fr 1fr;
+            background-color: rgb(87, 14, 223);
+            padding: 10px;
+        }
 
-        .c-button{
-            width: 80px; 
-            height: 70px;
+        .grid-container>div {
+            background-color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 30px;
+        }
+
+        .menu-item {
+            grid-area: 1 / 1 / 1 / 3;
+            text-align: center;
+        }
+
+        .q-button {
+            background-color: antiquewhite;
+        }
+
+        .quantity {
+            grid-area: 2 / 2 / 4 / 4;
+            vertical-align: ;
+        }
+
+        .quantity-change{
+            width: 25%; 
             background-color: #428DC6;
-            padding: 12px 7px 7px 7px; 
-            margin: 4px 5px; 
             display: inline-block; 
-            font-size: 40px;
-            font-weight: 700; 
             box-sizing: border-box; 
             color: #fff;
         }
-        .c-button.op{
-            width: 60px; 
-            height: 52px;
-            padding-top: 2px;
-            font-family: Gotham, "Helvetica Neue", Arial, Helvetica, sans-serif;
-            background-color: #709E67;
-            font-weight: 500;
-        }
-        .c-button:hover {
+ 
+        .quantity-change:hover {
             background-color: #606060;
+        }
+        .quantity-change.add-button{
+            background-color: #3cc022;
         }
         .c-total{
             width: 80%;
@@ -48,38 +68,48 @@
             box-sizing: border-box;
 
         }
-        .c-container{
+        .menu-container{
             border: 1px solid#000;
             padding: 10px;
             text-align: center;
-            width: 300px;
-            margin: 0 auto;
-        }
-        .title,p{
-            padding: 10px;
-            text-align: center;
+            width: 50%;
             margin: 0 auto;
         }
 
     </style>
     <script language="javascript">
         window.onload = function () {
-            buttons = document.querySelectorAll(".quantity");
+            buttons = document.querySelectorAll(".q-button");
             console.log(buttons);
             buttons.forEach(function (item) {
                 item.addEventListener("click", pressButton);
             }) // end buttons for each
         }// end Window onload
 
-        function addOne() {
-            console.log("you just pushed the button");
-            console.log(this.id);
-
-            let quantity = parseInt(this.innerText)
-            console.log("oldQuantity" + quantity);
-            quantity++;
-            this.innerHTML = quantity;
-
+        function pressButton() {
+            // This is an add button. Now determine which product it is with
+            let menuItem = this.classList[2];
+            // use that class name to seach for the quantity div that goes with that menuItem
+            quantDivId = menuItem + "-quantity"
+            let quantityDiv = document.getElementById(quantDivId);
+            let quantity = parseInt(quantityDiv.innerText);
+            if (this.classList.contains("add-button")) {
+                quantity++;
+            } else {
+                quantity--;
+            }
+            quantityDiv.innerHTML = quantity;
+            console.log("about to calculate total");
+            calculateTotal();
+        }
+        function calculateTotal() {
+            console.log("Mark 1: Inside calculate total");
+            console.log(menuItems);
+            var total;
+            for (item in menuItems) {
+                console.log(item);
+                console.log(menuItems[item]);
+            }
         }
     </script>
 
@@ -98,9 +128,9 @@
         </div>
     </div>
 
-    <div class='c-menu'>
+    <div class='menu-container'>
         <div class='c-container'>
-            <div class="item">Hot Dog</div>
+            <!-- <div class="item">Hot Dog</div>
             <div class="price">$4.00</div>
             <div class="quantity" id="hd-quantity">3</div><br />
             <div class="item">Fries</div>
@@ -108,13 +138,36 @@
             <div class="quantity" id="fries-quantity">3</div><br />
             <div class="item">Soda</div>
             <div class="price">$1.50</div>
-            <div class="quantity" id="soda-quantity">3</div><br />
+            <div class="quantity" id="soda-quantity">3</div><br /> -->
             <div>
-                <div class="item">Sauerkraut</div>
-                <div class="price">$1.00</div>
-                <div class="addButton">+</div>
-                <div class="subtractButton">-</div>
-                <div class="quantity" id="sauer-quantity">0</div><br />
+                <div class="grid-container">
+                    <div class="menu-item">Hot Dog</div>
+                    <div class="price" id="dog-price">$4.00</div>
+                    <div class="q-button add-button dog">+</div>
+                    <div class="q-button subtract-button dog">-</div>
+                    <div class="quantity" id="dog-quantity">0</div>
+                </div><!--  End grid-container -->
+                <div class="grid-container">
+                    <div class="menu-item">French Fries</div>
+                    <div class="price" id="fries-price">$3.50</div>
+                    <div class="q-button add-button fries">+</div>
+                    <div class="q-button subtract-button fries">-</div>
+                    <div class="quantity" id="fries-quantity">0</div>
+                </div><!--  End grid-container -->
+                <div class="grid-container">
+                    <div class="menu-item">Soda</div>
+                    <div class="price" id="soda-price">$1.50</div>
+                    <div class="q-button add-button soda">+</div>
+                    <div class="q-button subtract-button soda">-</div>
+                    <div class="quantity" id="soda-quantity">0</div>
+                </div><!--  End grid-container -->
+                <div class="grid-container">
+                    <div class="menu-item">Sauerkraut</div>
+                    <div class="price" id="sauerkraut-price">$1.00</div>
+                    <div class="q-button add-button sauerkraut">+</div>
+                    <div class="q-button subtract-button sauerkraut">-</div>
+                    <div class="quantity" id="sauerkraut-quantity">0</div>
+                </div><!--  End grid-container -->
             </div>
 
             <div class="c-total" id="c-total">Total: </div>
@@ -122,6 +175,13 @@
         </div><!-- End c-container-->
 
         <script language="javascript">
+            var menuItems = [];
+            menuItems["hot dog"] = 4.00;
+            menuItems["fries"] = 3.50;
+            menuItems["soda"] = 1.50;
+            menuItems["sauerkraut"] = 1.00;
+
+            console.log(menuItems);
             // makeButtons();
         </script>
     </div> <!-- End c-container-->
