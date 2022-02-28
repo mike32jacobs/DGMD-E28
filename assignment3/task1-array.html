@@ -87,30 +87,73 @@
         }// end Window onload
 
         function pressButton() {
-            // This is an add button. Now determine which product it is with
+            // Determine which product this button is with
             let menuItem = this.classList[2];
+
             // use that class name to seach for the quantity div that goes with that menuItem
-            quantDivId = menuItem + "-quantity"
+            quantDivId = menuItem + "-quantity";
+
             let quantityDiv = document.getElementById(quantDivId);
-            let quantity = parseInt(quantityDiv.innerText);
+            let quantity = Number(quantityDiv.innerText);
+
+            // Determine if it is add or subtract, and update quantity
             if (this.classList.contains("add-button")) {
                 quantity++;
             } else {
                 quantity--;
             }
+            // Update the page, so quantity is displayed
             quantityDiv.innerHTML = quantity;
-            console.log("about to calculate total");
             calculateTotal();
         }
         function calculateTotal() {
-            console.log("Mark 1: Inside calculate total");
-            console.log(menuItems);
-            var total;
+
+            total = 0; // Each time total is calculated it should start at zero.
             for (item in menuItems) {
-                console.log(item);
-                console.log(menuItems[item]);
+                // Get the quantity from the html 
+                // Search for the quantity div that goes with that item
+                quantDivId = item + "-quantity"
+
+                // Store that element
+                let quantityDiv = document.getElementById(quantDivId);
+
+                // Store that quantity as an int
+                let quantity = parseInt(quantityDiv.innerText);
+
+                // Get the price from the initial array
+                let price = Number(menuItems[item]);
+
+                total = total + quantity * price;
             }
+            // Put the total into currency format. I go tthis code from https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
+            let formattedTotal = (total).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+
+            // display the total on the page
+            let totalDiv = document.getElementById("c-total");
+            totalDiv.innerHTML = "Total: " + formattedTotal;
+
         }
+        // function makeMenu() {
+        //     var menuItems = [];
+        //     menuItems["hot-dog"] = 4.00;
+        //     menuItems["french-fries"] = 3.50;
+        //     menuItems["soda"] = 1.50;
+        //     menuItems["sauerkraut"] = 1.00;
+
+        //     for (item in menuItem) {
+        //         document.write('<div class="grid-container">' + '<br />');
+        //         document.write('<div class="menu-item">' + item + '</div><br />');
+        //         document.write('<div class="price" id="' + item + '">' + menuItems[item] + '</div><br />');
+
+        //         document.write('</div><!-- End grid-container-->' + '<br />');
+        //     }
+        //     document.write(btnString);
+        // }
+
+        // }
     </script>
 
 </head>
@@ -129,61 +172,48 @@
     </div>
 
     <div class='menu-container'>
-        <div class='c-container'>
-            <!-- <div class="item">Hot Dog</div>
-            <div class="price">$4.00</div>
-            <div class="quantity" id="hd-quantity">3</div><br />
-            <div class="item">Fries</div>
-            <div class="price">$3.50</div>
-            <div class="quantity" id="fries-quantity">3</div><br />
-            <div class="item">Soda</div>
-            <div class="price">$1.50</div>
-            <div class="quantity" id="soda-quantity">3</div><br /> -->
-            <div>
-                <div class="grid-container">
-                    <div class="menu-item">Hot Dog</div>
-                    <div class="price" id="dog-price">$4.00</div>
-                    <div class="q-button add-button dog">+</div>
-                    <div class="q-button subtract-button dog">-</div>
-                    <div class="quantity" id="dog-quantity">0</div>
-                </div><!--  End grid-container -->
-                <div class="grid-container">
-                    <div class="menu-item">French Fries</div>
-                    <div class="price" id="fries-price">$3.50</div>
-                    <div class="q-button add-button fries">+</div>
-                    <div class="q-button subtract-button fries">-</div>
-                    <div class="quantity" id="fries-quantity">0</div>
-                </div><!--  End grid-container -->
-                <div class="grid-container">
-                    <div class="menu-item">Soda</div>
-                    <div class="price" id="soda-price">$1.50</div>
-                    <div class="q-button add-button soda">+</div>
-                    <div class="q-button subtract-button soda">-</div>
-                    <div class="quantity" id="soda-quantity">0</div>
-                </div><!--  End grid-container -->
-                <div class="grid-container">
-                    <div class="menu-item">Sauerkraut</div>
-                    <div class="price" id="sauerkraut-price">$1.00</div>
-                    <div class="q-button add-button sauerkraut">+</div>
-                    <div class="q-button subtract-button sauerkraut">-</div>
-                    <div class="quantity" id="sauerkraut-quantity">0</div>
-                </div><!--  End grid-container -->
-            </div>
+        <div class="grid-container">
+            <div class="menu-item">hot-dog</div>
+            <div class="price" id="hot-dog-price">$4.00</div>
+            <div class="q-button add-button hot-dog">+</div>
+            <div class="q-button subtract-button hot-dog">-</div>
+            <div class="quantity" id="hot-dog-quantity">0</div>
+        </div><!--  End grid-container -->
+        <div class="grid-container">
+            <div class="menu-item">French Fries</div>
+            <div class="price" id="french-fries-price">$3.50</div>
+            <div class="q-button add-button french-fries">+</div>
+            <div class="q-button subtract-button french-fries">-</div>
+            <div class="quantity" id="french-fries-quantity">0</div>
+        </div><!--  End grid-container -->
+        <div class="grid-container">
+            <div class="menu-item">Soda</div>
+            <div class="price" id="soda-price">$1.50</div>
+            <div class="q-button add-button soda">+</div>
+            <div class="q-button subtract-button soda">-</div>
+            <div class="quantity" id="soda-quantity">0</div>
+        </div><!--  End grid-container -->
+        <div class="grid-container">
+            <div class="menu-item">Sauerkraut</div>
+            <div class="price" id="sauerkraut-price">$1.00</div>
+            <div class="q-button add-button sauerkraut">+</div>
+            <div class="q-button subtract-button sauerkraut">-</div>
+            <div class="quantity" id="sauerkraut-quantity">0</div>
+        </div><!--  End grid-container -->
+        <div class="c-total" id="c-total">Total: </div>
+    </div>
 
-            <div class="c-total" id="c-total">Total: </div>
-            <h2></h2>
-        </div><!-- End c-container-->
 
-        <script language="javascript">
-            var menuItems = [];
-            menuItems["hot dog"] = 4.00;
-            menuItems["fries"] = 3.50;
-            menuItems["soda"] = 1.50;
-            menuItems["sauerkraut"] = 1.00;
+    <script language="javascript">
+        var menuItems = [];
+        menuItems["hot-dog"] = 4.00;
+        menuItems["french-fries"] = 3.50;
+        menuItems["soda"] = 1.50;
+        menuItems["sauerkraut"] = 1.00;
 
-            console.log(menuItems);
-            // makeButtons();
-        </script>
+        var total = 0;
+
+    </script>
     </div> <!-- End c-container-->
 
 </body>
