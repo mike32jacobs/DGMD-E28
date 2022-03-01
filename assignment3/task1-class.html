@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <title>Assignment #3 Task #1 Class</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style type="" text/css">
+        h2{
+            text-align: center; 
+            font-size: 30px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2px;
+            grid-template-rows: 2fr 1fr 1fr;
+            background-color: rgb(87, 14, 223);
+            padding: 10px;
+        }
+
+        .grid-container>div {
+            /* background-color: #fff; */
+            text-align: center;
+            padding: 5px 5px 5px 5px;
+            font-size: 30px;
+        }
+
+        .menu-item {
+            grid-area: 1 / 1 / 1 / 3;
+            text-align: center;
+            background-color: #fff; 
+        }
+        .price, .quantity{
+            background-color: #fff; 
+        }
+
+        .q-button {
+            background-color: antiquewhite;
+        }
+
+        .quantity {
+            grid-area: 2 / 2 / 4 / 4;
+            vertical-align: middle;
+        }
+
+        .add{
+            width: 25%; 
+            background-color: #428DC6;
+            display: inline-block; 
+            box-sizing: border-box; 
+            color: #fff;
+        }
+ 
+        .q-button:hover {
+            background-color: #606060;
+        }
+        .add-button{
+            background-color: #3cc022;
+        }
+        .subtract-button{
+            background-color: #c02222;
+        }
+        .c-total{
+            width: 80%;
+            border: 5px solid #000;
+            margin: 2px auto;
+            font-size: 30px;
+            font-family: Gotham, "Helvetica Neue", Arial, Helvetica, sans-serif;
+            text-align: center;
+            padding: 6px 6px 6px 6px;
+            box-sizing: border-box;
+
+        }
+        .menu-container{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            background-color: DodgerBlue;
+            width:80%;
+            margin: 0 auto;
+        }
+        .menu-container > div {
+            background-color: #f1f1f1;
+            margin: 10px;
+            text-align: center;
+
+        }
+    </style>
+    <script language="javascript">
+        window.onload = function () {
+            buttons = document.querySelectorAll(".q-button");
+            console.log(buttons);
+            buttons.forEach(function (item) {
+                item.addEventListener("click", pressButton);
+            }) // end buttons for each
+            // buildMenu();
+            displayPrices();
+        }// end Window onload
+
+        function pressButton() {
+            // Determine which product this button is with
+            let menuItemString = this.classList[2];
+            let itemNumber = 0;
+            // Now iterate through the menu items until we find a match with the menuItemString
+            for (i = 0; i < menuItems.length; i++) {
+                if (menuItems[i].name == menuItemString) {
+                    itemNumber = i;
+                }
+            }
+
+            // Now determine if we are adding or subtracting
+            if (this.classList.contains("add-button")) {
+                menuItems[itemNumber].add();
+            } else {
+                menuItems[itemNumber].subtract();
+            }
+
+
+            // Update the page, so quantity is displayed
+            let quantDivId = menuItemString + "-quantity";
+            let quantityDiv = document.getElementById(quantDivId);
+
+            quantityDiv.innerHTML = menuItems[itemNumber].quantity;
+
+            calculateTotal();
+
+        }
+        function calculateTotal() {
+
+            total = 0; // Each time total is calculated it should start at zero.
+            for (i = 0; i < menuItems.length; i++) {
+                total = total + menuItems[i].quantity * menuItems[i].price;
+            }
+            // Put the total into currency format. I got this code from https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
+            let formattedTotal = (total).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+
+            // display the total on the page
+            let totalDiv = document.getElementById("c-total");
+            totalDiv.innerHTML = "Total: " + formattedTotal;
+
+        }
+
+        function displayPrices() {
+            for (i = 0; i < menuItems.length; i++) {
+
+                // Get the div where the price will be displayed
+                let priceDivId = menuItems[i].name + "-price";
+                let priceDiv = document.getElementById(priceDivId);
+
+                priceDiv.innerHTML = menuItems[i].showPrice();
+
+            }
+
+        }
+
+        class MenuItem {
+            constructor(name, price, quantity = 0) {
+                this.name = name;
+                this.price = price;
+                this.quantity = quantity; // Default of 0
+            }
+            showPrice() {
+                // Format the price to currency. I got this code from https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
+                let formattedPrice = (this.price).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+                return formattedPrice;
+            }
+            add() {
+                this.quantity++;
+            }
+            subtract() {
+                this.quantity--;
+            }
+        }
+
+
+    </script>
+
+</head>
+
+
+<body>
+    <ul>
+        <li>Go to <a href="assignment3.html" target="_blank">Assignment 3 Index</a></li>
+    </ul>
+    <div class="container">
+
+        <div class="jumbotron">
+            <h1 class="title">Joe's Hot Dogs</h1>
+            <p>Assignment #3 Task #1 This version uses classes to make the application functional: By Michael Jacobs</p>
+        </div>
+    </div>
+
+    <div class='menu-container'>
+        <div class="grid-container">
+            <div class="menu-item">Hot Dog</div>
+            <div class="price" id="hotDog-price"></div>
+            <div class="q-button add-button hotDog">+</div>
+            <div class="q-button subtract-button hotDog">-</div>
+            <div class="quantity" id="hotDog-quantity">0</div>
+        </div><!--  End grid-container -->
+        <div class="grid-container">
+            <div class="menu-item">French Fries</div>
+            <div class="price" id="frenchFries-price"></div>
+            <div class="q-button add-button frenchFries">+</div>
+            <div class="q-button subtract-button frenchFries">-</div>
+            <div class="quantity" id="frenchFries-quantity">0</div>
+        </div><!--  End grid-container -->
+        <div class="grid-container">
+            <div class="menu-item">Soda</div>
+            <div class="price" id="soda-price"></div>
+            <div class="q-button add-button soda">+</div>
+            <div class="q-button subtract-button soda">-</div>
+            <div class="quantity" id="soda-quantity">0</div>
+        </div><!--  End grid-container -->
+        <div class="grid-container">
+            <div class="menu-item">Sauerkraut</div>
+            <div class="price" id="sauerkraut-price"></div>
+            <div class="q-button add-button sauerkraut">+</div>
+            <div class="q-button subtract-button sauerkraut">-</div>
+            <div class="quantity" id="sauerkraut-quantity">0</div>
+        </div><!--  End grid-container -->
+        <div class="c-total" id="c-total">Total: $0.00</div>
+    </div>
+
+
+    <script language="javascript">
+        hotDog = new MenuItem("hotDog", 4.00);
+        frenchFries = new MenuItem("frenchFries", 3.50);
+        soda = new MenuItem("soda", 1.50);
+        sauerkraut = new MenuItem("sauerkraut", 1.00);
+
+        // Store all of the menu items in an array
+        menuItems = [hotDog, frenchFries, soda, sauerkraut];
+
+        var total = 0;
+    </script>
+    </div> <!-- End c-container-->
+
+</body>
+
+</html>
