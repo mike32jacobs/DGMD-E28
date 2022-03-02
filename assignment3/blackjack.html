@@ -29,13 +29,30 @@
             justify-content: center;
             flex-wrap: wrap;
             background-color: DodgerBlue;
-            width:80%;
+            /* width:80%; */
             margin: 0 auto;
         }
         .card-container > div {
             margin: 10px;
             text-align: center;
 
+        }
+        .h-title{
+            background-color: rgb(54, 216, 40);
+            padding: 5px;
+
+        }
+        .h-total{
+            background-color:rgb(199, 45, 160);
+            padding: 5px;
+
+
+        }
+        .hand-container{
+            border: 3px solid#000;;
+            border:5px;
+            background-color: rgb(243, 69, 26);
+            padding: 5px;
         }
         /* .not-shown {
         
@@ -116,7 +133,59 @@
                 }
 
             }
+            deal(player, numCards = 1) {
+                for (let i = 0; i < numCards; i++) {
+                    let drawCard = this.cards.shift();
+                    player.hand.push(drawCard);
+                }
+            }
 
+        }
+        class Player {
+            constructor(name, walletValue = 0) {
+                this.name = name;
+                this.walletValue = walletValue;
+                this.hand = [];
+            }
+            totalHand() {
+
+                var total = 0; //initialize the total to zero
+                var aces = 0
+                // Loop through the hand, and add the value of each card
+                for (let i = 0; i < this.hand.length; i++) {
+                    total = total + this.hand[i].value;
+                    if (this.hand[i].name == "ace") {
+                        aces++
+                    }
+                }
+                // if the total is greater than 21, check to see if there were any aces in the hand. Those could have a value of 1 instead of 11. Change the value to see if the total is less than 21.
+
+                // Note to professor: There must be a better way to do this. I want to do a loop until the total is less than 21 or there are no aces. Essentially, I want to subtract 10, or 20, or 30, or 40. I could use a case statement. The good news is this works as intended.
+
+                if ((total > 21) && (aces > 0)) {
+                    total = total - 10;
+                    if ((total > 21) && (aces > 1)) {
+                        total = total - 10;
+                        if ((total > 21) && (aces > 2)) {
+                            total = total - 10;
+                            if ((total > 21) && (aces > 3)) {
+                                total = total - 10;
+                            }
+                        }
+                    }
+                }
+                console.log("total is: " + total);
+                return total;
+
+            }
+
+            showHand() {
+                // This is not a function needed for gameplay. It helped me debug the constructor function and the shuffle deck function
+                for (let i = 0; i < this.hand.length; i++) {
+                    console.log(this.hand[i].name + " of " + this.hand[i].suit);
+                }
+
+            }
         }
     </script>
 
@@ -138,18 +207,18 @@
     </div>
     <div class="gameboard">
         <div class="hand-container dealer">
-            <div class="title" id="title-dealer">Dealer Hand</div>
+            <div class="h-title" id="title-dealer">Dealer Hand</div>
             <div class="card-container">
                 <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="back"></div>
 
                 <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="2 of Diamonds">
                 </div>
             </div> <!-- end card container -->
-            <div class="c-total" id="total-player">Total: </div>
+            <div class="h-total" id="total-dealer">Total: </div>
         </div><!-- end hand container -->
 
-        <div class="hand player">
-            <div class="title" id="title-player">Player Hand</div>
+        <div class="hand-container player">
+            <div class="h-title" id="title-player">Player Hand</div>
             <div class="card-container">
                 <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="2 of Diamonds">
                 </div>
@@ -164,28 +233,43 @@
                 <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="2 of Diamonds">
                 </div>
             </div><!-- end card container -->
-            <div class="c-total" id="total-player">Total: </div>
-            <div>
-                <form method='POST' action='process.php'>
-                    <label for="move">What would you like to do?</label>
-
-                    <input type='radio' id="stay" name='move' value="stay" checked><label for='stay'>Stay</label>
-                    <input type='radio' id="hit" name='move' value="hit"><label for='hit'>Hit</label>
-
-                    <button type='submit'>Play</button>
-                </form>
-            </div>
+            <div class="h-total" id="total-player">Total: </div>
         </div><!-- end hand container -->
+        <div class="move">
+            <form method='POST' action='process.php'>
+                <label for="move">What would you like to do?</label>
+
+                <input type='radio' id="stay" name='move' value="stay" checked><label for='stay'>Stay</label>
+                <input type='radio' id="hit" name='move' value="hit"><label for='hit'>Hit</label>
+
+                <button type='submit'>Play</button>
+            </form>
+        </div>
     </div><!-- end gameboard -->
 
     <script language="javascript">
-        // card1 = new Card("king", 10, "hearts");
+        card1 = new Card("ace", 11, "hearts");
+        card2 = new Card("ace", 11, "spades");
+        card3 = new Card("ace", 11, "diamonds");
+
         // document.write(card1.makeImgTag() + '<br />');
         // document.write(card1.makeDivTag());
         deck1 = new Deck();
-        deck1.showDeck();
         deck1.shuffleDeck();
-        deck1.showDeck();
+        dealer = new Player("dealer");
+        p1 = new Player("p1");
+        deck1.deal(p1, 1);
+        deck1.deal(dealer, 3);
+        p1.hand.push(card1);
+        p1.hand.push(card2);
+
+        p1.hand.push(card3);
+        console.log("p1 hand");
+        p1.showHand();
+        console.log("Dealer hand");
+        dealer.showHand();
+        console.log("now look at the deck");
+        p1.totalHand();
 
         // str46 = card1.cardDiv();
 
