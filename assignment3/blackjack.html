@@ -77,6 +77,47 @@
             //     this.quantity--;
             // }
         }
+        class Deck {
+            constructor() {
+                this.name = "myDeck";
+                this.cards = [];
+
+                //Build a deck from scratch
+                // Dynamically create a deck of cards using a multidimensional array.
+                let cardNames = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'];
+                let cardValues = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
+                let cardSuits = ['hearts', 'spades', 'diamonds', 'clubs'];
+
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 13; j++) {
+                        // Make a card
+                        let c = new Card(cardNames[j], cardValues[j], cardSuits[i]);
+                        // add it to deck
+                        this.cards.push(c);
+                    }
+                }
+
+            }
+            showDeck() {
+                // This is not a function needed for gameplay. It helped me debug the constructor function and the shuffle deck function
+                for (let i = 0; i < this.cards.length; i++) {
+                    console.log(this.cards[i].name + " of " + this.cards[i].suit);
+                }
+
+            }
+            shuffleDeck() {
+
+                // I am going to try the Fisher-Yates algorithm which I found here: https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+                for (let i = this.cards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    const temp = this.cards[i];
+                    this.cards[i] = this.cards[j];
+                    this.cards[j] = temp;
+                }
+
+            }
+
+        }
     </script>
 
 
@@ -138,9 +179,13 @@
     </div><!-- end gameboard -->
 
     <script language="javascript">
-        card1 = new Card("king", 10, "hearts");
-        document.write(card1.makeImgTag() + '<br />');
-        document.write(card1.makeDivTag());
+        // card1 = new Card("king", 10, "hearts");
+        // document.write(card1.makeImgTag() + '<br />');
+        // document.write(card1.makeDivTag());
+        deck1 = new Deck();
+        deck1.showDeck();
+        deck1.shuffleDeck();
+        deck1.showDeck();
 
         // str46 = card1.cardDiv();
 
