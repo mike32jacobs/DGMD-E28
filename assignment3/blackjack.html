@@ -148,7 +148,6 @@
                 this.hand = [];
             }
             totalHand() {
-
                 var total = 0; //initialize the total to zero
                 var aces = 0
                 // Loop through the hand, and add the value of each card
@@ -178,6 +177,15 @@
                 return total;
 
             }
+            // displayTotal() {
+            //     let total = totalHand();
+
+            //     // Append that total to the inner html of the appropriate div
+            //     let totalDivId = "total-" + this.name;
+            //     totalDiv = document.getElementById(totalDivId);
+            //     totalDiv.innerHTML = ("Total: " + total);
+
+            // }
 
             showHand() {
                 // This is not a function needed for gameplay. It helped me debug the constructor function and the shuffle deck function
@@ -186,6 +194,27 @@
                 }
 
             }
+
+        }
+        function displayCards(player) {
+            // Loop through the cards in the player's hand and build a div to display each card. Place the div in the appropriate card container
+            console.log("mark33 - You are inside of the displayCards function. ");
+            cardContainerId = player.name + "-cards";
+            console.log("Mark 34: " + cardContainerId);
+            let cardContainerDiv = document.getElementById(cardContainerId);
+
+            for (let i = 0; i < player.hand.length; i++) {
+                cardContainerDiv.innerHTML += player.hand[i].makeDivTag();
+
+            }
+        }
+        function displayTotal(player) {
+            let total = player.totalHand();
+
+            // Append that total to the inner html of the appropriate div
+            let totalDivId = ("total-" + player.name);
+            totalDiv = document.getElementById(totalDivId);
+            totalDiv.innerHTML = ("Total: " + total);
         }
     </script>
 
@@ -208,32 +237,17 @@
     <div class="gameboard">
         <div class="hand-container dealer">
             <div class="h-title" id="title-dealer">Dealer Hand</div>
-            <div class="card-container">
-                <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="back"></div>
-
-                <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="2 of Diamonds">
-                </div>
+            <div class="card-container" id="dealer-cards">
             </div> <!-- end card container -->
-            <div class="h-total" id="total-dealer">Total: </div>
+            <div class="h-total" id="total-dealer"></div>
         </div><!-- end hand container -->
 
         <div class="hand-container player">
             <div class="h-title" id="title-player">Player Hand</div>
-            <div class="card-container">
-                <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="2 of Diamonds">
-                </div>
-                <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/king_of_diamonds.svg"
-                        alt="2 of Diamonds"></div>
-                <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="2 of Diamonds">
-                </div>
-                <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/3_of_diamonds.svg" alt="3 of Diamonds">
-                </div>
-                <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/jack_of_diamonds.svg"
-                        alt="Jack of Diamonds"></div>
-                <div class="card" id="d-card-1"><img src="/images/SVG-cards-1.3/2_of_clubs.svg" alt="2 of Diamonds">
-                </div>
+            <div class="card-container" id="p1-cards">
+
             </div><!-- end card container -->
-            <div class="h-total" id="total-player">Total: </div>
+            <div class="h-total" id="total-p1"></div>
         </div><!-- end hand container -->
         <div class="move">
             <form method='POST' action='process.php'>
@@ -248,29 +262,18 @@
     </div><!-- end gameboard -->
 
     <script language="javascript">
-        card1 = new Card("ace", 11, "hearts");
-        card2 = new Card("ace", 11, "spades");
-        card3 = new Card("ace", 11, "diamonds");
 
-        // document.write(card1.makeImgTag() + '<br />');
-        // document.write(card1.makeDivTag());
         deck1 = new Deck();
         deck1.shuffleDeck();
         dealer = new Player("dealer");
         p1 = new Player("p1");
-        deck1.deal(p1, 1);
-        deck1.deal(dealer, 3);
-        p1.hand.push(card1);
-        p1.hand.push(card2);
-
-        p1.hand.push(card3);
-        console.log("p1 hand");
-        p1.showHand();
-        console.log("Dealer hand");
-        dealer.showHand();
-        console.log("now look at the deck");
+        deck1.deal(p1, 2);
+        deck1.deal(dealer, 2);
         p1.totalHand();
-
+        displayCards(p1);
+        displayCards(dealer);
+        displayTotal(p1);
+        displayTotal(dealer);
         // str46 = card1.cardDiv();
 
     </script>
