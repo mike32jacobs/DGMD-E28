@@ -54,6 +54,28 @@
             background-color: rgb(243, 69, 26);
             padding: 5px;
         }
+        .move{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            background-color: DodgerBlue;
+            /* width:80%; */
+            margin: 0 auto;
+        }
+        .move > div {
+            border: 1px solid#000;
+            padding: 10px;
+            font-size: 30px;
+            color: white;
+            text-align: center;
+            width: 20%;
+            margin: 0 auto;
+
+        }
+        .move > div:hover {
+            background-color: rgba(210, 215, 221, 0.883);
+
+        }
         /* .not-shown {
         
             background: url(/images/PNG-cards-1.3/back.png) no-repeat;
@@ -62,6 +84,7 @@
      */
     </style>
     <script language="javascript">
+        var winner = null;
 
         class Card {
             constructor(name, value, suit) {
@@ -177,15 +200,6 @@
                 return total;
 
             }
-            // displayTotal() {
-            //     let total = totalHand();
-
-            //     // Append that total to the inner html of the appropriate div
-            //     let totalDivId = "total-" + this.name;
-            //     totalDiv = document.getElementById(totalDivId);
-            //     totalDiv.innerHTML = ("Total: " + total);
-
-            // }
 
             showHand() {
                 // This is not a function needed for gameplay. It helped me debug the constructor function and the shuffle deck function
@@ -197,12 +211,14 @@
 
         }
         function displayCards(player) {
-            // Loop through the cards in the player's hand and build a div to display each card. Place the div in the appropriate card container
-            console.log("mark33 - You are inside of the displayCards function. ");
             cardContainerId = player.name + "-cards";
             console.log("Mark 34: " + cardContainerId);
             let cardContainerDiv = document.getElementById(cardContainerId);
 
+            //remove the previously displayed cards
+            cardContainerDiv.innerHTML = "";
+
+            // Loop through the cards in the player's hand and build a div to display each card. Place the div in the appropriate card container
             for (let i = 0; i < player.hand.length; i++) {
                 cardContainerDiv.innerHTML += player.hand[i].makeDivTag();
 
@@ -216,6 +232,79 @@
             totalDiv = document.getElementById(totalDivId);
             totalDiv.innerHTML = ("Total: " + total);
         }
+
+        function displayWalletValue(player) {
+            let walletTotal = player.walletValue;
+
+            // Append that total to the inner html of the appropriate div
+            let walletDivId = ("wallet-" + player.name);
+            walletAmountDiv = document.getElementById(walletDivId);
+            walletAmountDiv.innerHTML = ("You have $" + walletTotal + " in your wallet.");
+        }
+
+        function initializeGame() {
+            // This function creates new players, and a new deck and sets the wallet =$100 
+            deck = new Deck();
+            deck.shuffleDeck();
+            dealer = new Player("dealer");
+            p1 = new Player("p1", 100);
+            deck.deal(p1, 2);
+            deck.deal(dealer, 2);
+
+            displayCards(p1);
+            displayCards(dealer);
+            displayTotal(p1);
+            displayTotal(dealer);
+            displayWalletValue(p1);
+
+        }
+
+        function newGame() {
+            // This function starts a new game, but does not interfere with players or wallets
+            winner = null;
+            //Build a new deck
+            deck = new Deck();
+            deck.shuffleDeck();
+
+            // Clear player hands
+            p1.hand = [];
+            dealer.hand = [];
+
+            //Clear displayed cards
+            dealerCardContainer = document.getElementById("dealer-cards");
+            dealerCardContainer.innerHTML = "";
+            p1CardContainer = document.getElementById("p1-cards");
+            p1CardContainer.innerHTML = "";
+
+
+            deck.deal(p1, 2);
+            deck.deal(dealer, 2);
+
+            displayCards(p1);
+            displayCards(dealer);
+            displayTotal(p1);
+            displayTotal(dealer);
+            displayWalletValue(p1);
+
+        }
+        function hit(player) {
+            deck.deal(player);
+            displayCards(player);
+            displayTotal(player);
+        }
+        function dealerTurn() {
+            // Hide the move options for p1
+            let movesDiv = document.getElementById("player-turn-container");
+            movesDiv.style.display = 'none';
+
+            // Dealer must hit on anything less than 17
+            let dealerTotal = dealer.totalHand();
+            while (dealerTotal < 17) {
+                hit(dealer);
+                dealerTotal = dealer.totalHand();
+            }
+        }
+
     </script>
 
 
@@ -249,31 +338,23 @@
             </div><!-- end card container -->
             <div class="h-total" id="total-p1"></div>
         </div><!-- end hand container -->
-        <div class="move">
-            <form method='POST' action='process.php'>
-                <label for="move">What would you like to do?</label>
-
-                <input type='radio' id="stay" name='move' value="stay" checked><label for='stay'>Stay</label>
-                <input type='radio' id="hit" name='move' value="hit"><label for='hit'>Hit</label>
-
-                <button type='submit'>Play</button>
-            </form>
-        </div>
+        <div class="move" id="player-turn-container">
+            <div class="stay" id="stay">Stay</div>
+            <div class="hit" id="hit">Hit</div>
+        </div> <!-- end move container -->
+        <div class=wallet-container>
+            <div class="bet" id="bet">Bet</div>
+            <div class="wallet-amount" id="wallet-p1"></div>
+        </div><!-- end wallet container -->
+    </div>
     </div><!-- end gameboard -->
 
     <script language="javascript">
+        initializeGame();
 
-        deck1 = new Deck();
-        deck1.shuffleDeck();
-        dealer = new Player("dealer");
-        p1 = new Player("p1");
-        deck1.deal(p1, 2);
-        deck1.deal(dealer, 2);
-        p1.totalHand();
-        displayCards(p1);
-        displayCards(dealer);
-        displayTotal(p1);
-        displayTotal(dealer);
+        // newGame();
+
+
         // str46 = card1.cardDiv();
 
     </script>
