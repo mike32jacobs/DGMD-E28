@@ -76,6 +76,23 @@
             background-color: rgba(210, 215, 221, 0.883);
 
         }
+        .result{
+            background-color: #428DC6;
+            padding: 12px 7px 7px 7px; 
+            margin: 4px 5px; 
+            display: inline-block; 
+            font-size: 40px;
+            font-weight: 700; 
+            box-sizing: border-box; 
+            color: #fff;
+        }
+        .new-game-btn{
+            display: inline-block; 
+            font-size: 40px;
+            font-weight: 700; 
+            box-sizing: border-box; 
+            color: rgb(17, 17, 17);
+        }
         /* .not-shown {
         
             background: url(/images/PNG-cards-1.3/back.png) no-repeat;
@@ -85,6 +102,8 @@
     </style>
     <script language="javascript">
         var winner = null;
+        var gameOver = false;
+        var bet = 25;
 
         class Card {
             constructor(name, value, suit) {
@@ -196,7 +215,6 @@
                         }
                     }
                 }
-                console.log("total is: " + total);
                 return total;
 
             }
@@ -212,7 +230,6 @@
         }
         function displayCards(player) {
             cardContainerId = player.name + "-cards";
-            console.log("Mark 34: " + cardContainerId);
             let cardContainerDiv = document.getElementById(cardContainerId);
 
             //remove the previously displayed cards
@@ -223,6 +240,7 @@
                 cardContainerDiv.innerHTML += player.hand[i].makeDivTag();
 
             }
+
         }
         function displayTotal(player) {
             let total = player.totalHand();
@@ -231,6 +249,7 @@
             let totalDivId = ("total-" + player.name);
             totalDiv = document.getElementById(totalDivId);
             totalDiv.innerHTML = ("Total: " + total);
+
         }
 
         function displayWalletValue(player) {
@@ -240,28 +259,37 @@
             let walletDivId = ("wallet-" + player.name);
             walletAmountDiv = document.getElementById(walletDivId);
             walletAmountDiv.innerHTML = ("You have $" + walletTotal + " in your wallet.");
+            console.log("walletTotal" + walletTotal);
         }
 
-        function initializeGame() {
-            // This function creates new players, and a new deck and sets the wallet =$100 
-            deck = new Deck();
-            deck.shuffleDeck();
-            dealer = new Player("dealer");
-            p1 = new Player("p1", 100);
-            deck.deal(p1, 2);
-            deck.deal(dealer, 2);
+        function displayWinner(message) {
+            // Check to see if there is a winner
+            if (winner == null) {
+                console.log("Winner is null");
+            } else {
+                let messageDiv = document.getElementById("result");
+                messageDiv.innerHTML = message;
+                let newGamebtn = '<br><button type="button" class ="new-game-btn" onclick="newGame()">New Game</button>';
+                messageDiv.innerHTML += newGamebtn;
+                messageDiv.style.display = 'inline-block'
 
-            displayCards(p1);
-            displayCards(dealer);
-            displayTotal(p1);
-            displayTotal(dealer);
-            displayWalletValue(p1);
+            }
+            alert("mark 23: Inside of the displayWinner function");
 
         }
 
         function newGame() {
             // This function starts a new game, but does not interfere with players or wallets
             winner = null;
+            gameOver = false;
+
+            // Hide results of previous game
+            let resultDiv = document.getElementById("result");
+
+            resultDiv.innerHTML = "Test111";
+            resultDiv.style.display = 'none'
+
+
             //Build a new deck
             deck = new Deck();
             deck.shuffleDeck();
@@ -285,12 +313,66 @@
             displayTotal(p1);
             displayTotal(dealer);
             displayWalletValue(p1);
-
+            checkBlackJack(p1, dealer);
         }
         function hit(player) {
             deck.deal(player);
             displayCards(player);
             displayTotal(player);
+            if (player.totalHand() > 21) {
+                // The Player busts
+                checkWinner(p1, dealer);
+            }
+        }
+        function stay() {
+            alert("Now it is the dealer's turn");
+            dealerTurn();
+        }
+        function getFormData(player) {
+            // I need to collect this form data from the user, and then validate it. Once I do, I can place the bet. I got this idea from stackoverflow.com https://stackoverflow.com/questions/18441375/submit-form-field-values-to-a-javascript-function
+            let maxBet = player.walletValue;
+            let amount = document.getElementById("amount").value;
+
+            // validate the Data
+            console.log("Inside the getFormData function");
+            console.log("amount: " + amount);
+            console.log("maxBet: " + maxBet);
+
+            console.log(amount > maxBet);
+            if (amount > maxBet) {
+                alert("That bet is too big. You must wager an amount less than or equal to " + player.walletValue);
+            } else {
+                bet = amount;
+                placeBet(player);
+            }
+
+
+        }
+        function placeBet(player) {
+            // Check to see if the player has enough money in their wallet
+            if (bet <= player.walletValue) {
+                player.walletValue = (player.walletValue - bet);
+                console.log("player.walletValue" + player.walletValue);
+                console.log("p1.walletValue" + p1.walletValue);
+
+            } else {
+                alert("That bet is too big. You must wager an amount less than or equal to " + player.walletValue);
+            }
+            // displayWalletValue(player);
+            alert("mark 17: Inside of the placeBet function");
+            console.log("mark 13: Inside of the placeBet function");
+            console.log("player.walletValue" + player.walletValue);
+            // displayBet();
+            return;
+
+        }
+        function displayBet() {
+
+            // Append that total to the inner html of the appropriate div
+            betAmountDiv = document.getElementById("bet");
+            betAmountDiv.innerHTML = ("Your bet for this game is $" + bet + ". ");
+            alert("mark 18: Inside of the displayBet function");
+
         }
         function dealerTurn() {
             // Hide the move options for p1
@@ -302,7 +384,72 @@
             while (dealerTotal < 17) {
                 hit(dealer);
                 dealerTotal = dealer.totalHand();
+                // I want to put a pause between the dealer's turn.
+                // https://stackoverflow.com/questions/14226803/wait-5-seconds-before-executing-next-line
+
+                // alert("The dealer is going again.");
             }
+            checkWinner(p1, dealer);
+
+        }
+        function checkBlackJack(player, dealer) {
+            // The purpose of this function is to see if the player or the dealer was initially dealt black jack. If so, end the game and check the winner.
+
+            // Hide the move options for p1
+            let movesDiv = document.getElementById("player-turn-container");
+            movesDiv.style.display = 'inline-block';
+            if ((player.totalHand() == 21) || (dealer.totalHand() == 21)) {
+                // someone was dealt blackjack. Check the winner
+                winner = checkWinner(player, dealer);
+
+                // Hide the move options for p1
+                let movesDiv = document.getElementById("player-turn-container");
+                movesDiv.style.display = 'none';
+            }
+
+        }
+        function checkWinner(player, dealer) {
+            let p1Score = player.totalHand();
+            let dealerScore = dealer.totalHand();
+            let message = "Default Message"
+            if (dealerScore > 21) {
+                // Dealer Busts.
+                winner = player;
+                gameOver = true;
+                message = ("Dealer Busts. The winner is " + winner.name);
+
+            } else if ((p1Score > dealerScore) && (p1Score < 22)) {
+                // Nobody busts. player beats dealer
+                winner = player;
+                gameOver = true;
+                message = ("The winner is " + winner.name);
+
+
+            } else if ((dealerScore > p1Score) && (dealerScore < 22)) {
+                // Nobody busts. dealer beats player
+                winner = dealer;
+                gameOver = true;
+                message = ("The winner is " + winner.name);
+
+
+            } else if ((p1Score == dealerScore) && (p1Score < 22)) {
+                // nobody busts and the score is tied. Player gets the win.
+                winner = player;
+                gameOver = true;
+                message = ("Tie goes to the player. The winner is " + winner.name);
+
+
+            } else {
+                // The only option left is the player busted before the dealer went
+                winner = dealer;
+                gameOver = true;
+                message = ("The player went bust before the dealer had a turn. The winner is " + winner.name);
+            }
+            // Hide the move options for p1
+            let movesDiv = document.getElementById("player-turn-container");
+            movesDiv.style.display = 'none';
+            displayWinner(message);
+
         }
 
     </script>
@@ -339,23 +486,41 @@
             <div class="h-total" id="total-p1"></div>
         </div><!-- end hand container -->
         <div class="move" id="player-turn-container">
-            <div class="stay" id="stay">Stay</div>
-            <div class="hit" id="hit">Hit</div>
+            <button type="button" onclick="stay()">Stay</button>
+            <button type="button" onclick="hit(p1)">Hit</button>
+            <!-- <div class="stay" id="stay">Stay</div>
+            <div class="hit" id="hit">Hit</div> -->
         </div> <!-- end move container -->
         <div class=wallet-container>
             <div class="bet" id="bet">Bet</div>
+            <form>
+                <label for="amount">Enter the amount you would like to bet:</label>
+                <input type="number" id="amount" name="amount" min="0">
+                <input class="button" name="submit" type="submit" value="submit" onclick="(getFormData(p1))" />
+            </form>
+            <!-- <button type="button" onclick="placeBet(p1, bet)">bet</button> -->
+
             <div class="wallet-amount" id="wallet-p1"></div>
         </div><!-- end wallet container -->
-    </div>
+
+        <div class="result" id="result" style="display:none">New Game</button>
+        </div>
     </div><!-- end gameboard -->
 
     <script language="javascript">
-        initializeGame();
+        deck = new Deck();
+        deck.shuffleDeck();
+        dealer = new Player("dealer");
+        p1 = new Player("p1", 100);
+        deck.deal(p1, 2);
+        deck.deal(dealer, 2);
 
-        // newGame();
-
-
-        // str46 = card1.cardDiv();
+        displayCards(p1);
+        displayCards(dealer);
+        displayTotal(p1);
+        displayTotal(dealer);
+        displayWalletValue(p1);
+        checkBlackJack(p1, dealer);
 
     </script>
 
