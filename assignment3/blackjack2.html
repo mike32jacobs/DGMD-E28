@@ -227,45 +227,96 @@
                 }
 
             }
+            displayCards() {
+                cardContainerId = this.name + "-cards";
+                let cardContainerDiv = document.getElementById(cardContainerId);
 
-        }
-        function displayCards(player) {
-            cardContainerId = player.name + "-cards";
-            let cardContainerDiv = document.getElementById(cardContainerId);
+                //remove the previously displayed cards
+                cardContainerDiv.innerHTML = "";
 
-            //remove the previously displayed cards
-            cardContainerDiv.innerHTML = "";
+                // Loop through the cards in the player's hand and build a div to display each card. Place the div in the appropriate card container
+                for (let i = 0; i < this.hand.length; i++) {
+                    cardContainerDiv.innerHTML += this.hand[i].makeDivTag();
 
-            // Loop through the cards in the player's hand and build a div to display each card. Place the div in the appropriate card container
-            for (let i = 0; i < player.hand.length; i++) {
-                cardContainerDiv.innerHTML += player.hand[i].makeDivTag();
+                }
 
             }
-            return;
+            displayTotal() {
+                let total = this.totalHand();
+
+                // Append that total to the inner html of the appropriate div
+                let totalDivId = ("total-" + this.name);
+                totalDiv = document.getElementById(totalDivId);
+                totalDiv.innerHTML = ("Total: " + total);
+
+            }
+
+            displayWalletValue() {
+                let walletTotal = this.walletValue;
+
+                // Append that total to the inner html of the appropriate div
+                let walletDivId = ("wallet-" + this.name);
+                walletAmountDiv = document.getElementById(walletDivId);
+                walletAmountDiv.innerHTML = ("You have $" + walletTotal + " in your wallet.");
+                console.log("walletTotal" + walletTotal);
+
+            }
 
         }
-        function displayTotal(player) {
-            let total = player.totalHand();
+        class Game {
+            constructor(name, player, dealer, deck) {
+                this.name = name;
+                this.player = player;
+                this.dealer = dealer;
+                this.deck = deck;
+                this.winner = null;
+                this.bet = 0;
+            }
+            startGame() {
+                this.deck.shuffleDeck();
+                this.deck.deal(this.player, 2);
+                this.deck.deal(this.dealer, 2);
+            }
 
-            // Append that total to the inner html of the appropriate div
-            let totalDivId = ("total-" + player.name);
-            totalDiv = document.getElementById(totalDivId);
-            totalDiv.innerHTML = ("Total: " + total);
-            return;
-
-        }
-
-        function displayWalletValue(player) {
-            let walletTotal = player.walletValue;
-
-            // Append that total to the inner html of the appropriate div
-            let walletDivId = ("wallet-" + player.name);
-            walletAmountDiv = document.getElementById(walletDivId);
-            walletAmountDiv.innerHTML = ("You have $" + walletTotal + " in your wallet.");
-            console.log("walletTotal" + walletTotal);
-            return;
 
         }
+        // function displayCards(player) {
+        //     cardContainerId = player.name + "-cards";
+        //     let cardContainerDiv = document.getElementById(cardContainerId);
+
+        //     //remove the previously displayed cards
+        //     cardContainerDiv.innerHTML = "";
+
+        //     // Loop through the cards in the player's hand and build a div to display each card. Place the div in the appropriate card container
+        //     for (let i = 0; i < player.hand.length; i++) {
+        //         cardContainerDiv.innerHTML += player.hand[i].makeDivTag();
+
+        //     }
+        //     return;
+
+        // }
+        // function displayTotal(player) {
+        //     let total = player.totalHand();
+
+        //     // Append that total to the inner html of the appropriate div
+        //     let totalDivId = ("total-" + player.name);
+        //     totalDiv = document.getElementById(totalDivId);
+        //     totalDiv.innerHTML = ("Total: " + total);
+        //     return;
+
+        // }
+
+        // function displayWalletValue(player) {
+        //     let walletTotal = player.walletValue;
+
+        //     // Append that total to the inner html of the appropriate div
+        //     let walletDivId = ("wallet-" + player.name);
+        //     walletAmountDiv = document.getElementById(walletDivId);
+        //     walletAmountDiv.innerHTML = ("You have $" + walletTotal + " in your wallet.");
+        //     console.log("walletTotal" + walletTotal);
+        //     return;
+
+        // }
 
         function displayWinner(message) {
             // Check to see if there is a winner
@@ -279,12 +330,24 @@
                 messageDiv.style.display = 'inline-block'
 
             }
-            alert("mark 23: Inside of the displayWinner function");
             return;
 
         }
 
         function newGame() {
+
+            console.log("mark 8: Inside of the newGame function. Check variables before starting a new game.");
+            console.log("p1.walletValue: " + p1.walletValue);
+            console.log("bet: " + bet);
+            console.log("winner.name: " + winner.name);
+            console.log("gameOver: " + gameOver);
+            console.log("p1.totalHand(): " + p1.totalHand());
+
+
+
+
+
+            //     console.log("player.walletValue" + player.walletValue);
             // This function starts a new game, but does not interfere with players or wallets
             winner = null;
             gameOver = false;
@@ -304,6 +367,7 @@
             p1.hand = [];
             dealer.hand = [];
 
+
             //Clear displayed cards
             dealerCardContainer = document.getElementById("dealer-cards");
             dealerCardContainer.innerHTML = "";
@@ -313,6 +377,12 @@
 
             deck.deal(p1, 2);
             deck.deal(dealer, 2);
+            console.log("9: Inside of the newGame function. Check variables before starting a new game.");
+            console.log("p1.walletValue: " + p1.walletValue);
+            console.log("bet: " + bet);
+            console.log("winner: " + winner);
+            console.log("gameOver: " + gameOver);
+            console.log("p1.totalHand(): " + p1.totalHand());
 
             displayCards(p1);
             displayCards(dealer);
@@ -383,18 +453,18 @@
             return;
 
         }
-        function displayBet() {
+        // function displayBet() {
 
-            // Append that total to the inner html of the appropriate div
-            betAmountDiv = document.getElementById("bet");
-            betAmountDiv.innerHTML = ("Your bet for this game is $" + bet + ". ");
-            console.log("mark 18: Inside of the displayBet function");
-            console.log("bet: " + bet);
-            console.log("p1.walletValue" + p1.walletValue);
-            alert("mark 18: Inside of the displayBet function");
-            return;
+        //     // Append that total to the inner html of the appropriate div
+        //     betAmountDiv = document.getElementById("bet");
+        //     betAmountDiv.innerHTML = ("Your bet for this game is $" + bet + ". ");
+        //     console.log("mark 18: Inside of the displayBet function");
+        //     console.log("bet: " + bet);
+        //     console.log("p1.walletValue" + p1.walletValue);
+        //     alert("mark 18: Inside of the displayBet function");
+        //     return;
 
-        }
+        // }
         function dealerTurn() {
             // Hide the move options for p1
             let movesDiv = document.getElementById("player-turn-container");
@@ -493,6 +563,8 @@
         <div class="jumbotron">
             <h1 class="title"> BlackJack</h1>
             <p>Assignment #3 Task #2: By Michael Jacobs</p>
+            <p>THIS IS VERSION 2: I am getting rid of the bets functionality</p>
+
         </div>
     </div>
     <div class="gameboard">
