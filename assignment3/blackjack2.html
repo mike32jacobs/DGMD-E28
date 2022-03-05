@@ -86,13 +86,13 @@
             box-sizing: border-box; 
             color: #fff;
         }
-        .new-game-btn{
+        /* .new-game-btn{
             display: inline-block; 
             font-size: 40px;
             font-weight: 700; 
             box-sizing: border-box; 
             color: rgb(17, 17, 17);
-        }
+        } */
         /* .not-shown {
         
             background: url(/images/PNG-cards-1.3/back.png) no-repeat;
@@ -258,8 +258,6 @@
                 let walletDivId = ("wallet-" + this.name);
                 let walletAmountDiv = document.getElementById(walletDivId);
                 walletAmountDiv.innerHTML = ("You have $" + walletTotal + " in your wallet.");
-                console.log("walletTotal" + walletTotal);
-
             }
 
         }
@@ -280,6 +278,24 @@
                 this.displayItems();
                 this.checkBlackJack();
             }
+            newGame() {
+                // This method will clear the game data, but keep the players and the wallet value.
+                //reset game deck, winner, but, and game over
+                this.deck = new Deck;
+                this.winner = null;
+                this.bet = 0;
+                this.gameOver = false;
+
+                // Reset player hand
+                this.player.hand = [];
+                // Reset dealer hand
+                this.dealer.hand = [];
+                // Hide the winning message and new game button
+                this.displayWinner();
+                // Start the game over
+                this.startGame();
+
+            }
             displayItems() {
                 //display cards, totals, wallet, moves, and bet form for player
                 this.player.displayCards();
@@ -287,6 +303,7 @@
                 this.player.displayWalletValue();
                 this.displayMoves();
                 this.displaySubmitBetInputs();
+                this.displayBet();
 
                 // Display the cards and the total for the dealer
                 this.dealer.displayCards();
@@ -296,6 +313,9 @@
                 // Hide the move options for player
                 let movesDiv = document.getElementById("player-turn-container");
                 movesDiv.style.display = 'none';
+                // Hide the form, so the player cannot bet.
+                let formDiv = document.getElementById("formDiv");
+                formDiv.style.display = 'none';
 
                 // Dealer must hit on anything less than 17
                 let dealerTotal = this.dealer.totalHand();
@@ -313,42 +333,51 @@
                     // Dealer Busts.
                     this.winner = this.player;
                     this.gameOver = true;
-                    message = ("Dealer Busts. The winner is " + this.winner.name);
+                    message = ("Dealer Busts. The winner is " + this.winner.name + ". They won $" + this.bet + ".");
 
                 } else if ((p1Score > dealerScore) && (p1Score < 22)) {
                     // Nobody busts. player beats dealer
                     this.winner = this.player;
                     this.gameOver = true;
-                    message = ("The winner is " + this.winner.name);
-
+                    message = ("The winner is " + this.winner.name + ". They won $" + this.bet + ".");
 
                 } else if ((dealerScore > p1Score) && (dealerScore < 22)) {
                     // Nobody busts. dealer beats player
                     this.winner = this.dealer;
                     this.gameOver = true;
-                    message = ("The winner is " + this.winner.name);
+                    message = ("The winner is the dealer. " + this.player.name + " lost $" + this.bet + " on the hand.");
 
 
                 } else if ((p1Score == dealerScore) && (p1Score < 22)) {
                     // nobody busts and the score is tied. Player gets the win.
                     this.winner = this.player;
                     this.gameOver = true;
-                    message = ("Tie goes to the player. The winner is " + this.winner.name);
-
+                    message = ("Tied Score: The dealer loses ties. The winner is " + this.winner.name + ". They won $" + this.bet + ".");
 
                 } else {
                     // The only option left is the player busted before the dealer went
                     this.winner = this.dealer;
                     this.gameOver = true;
-                    message = ("The player went bust before the dealer had a turn. The winner is " + this.winner.name);
+                    message = ("The player went bust before the dealer had a turn. The winner is the dealer. " + this.player.name + " lost $" + this.bet + " on the hand.");
+
                 }
+                //pay the bets
+                this.payBet();
+                // this.player.displayWalletValue();
+                this.displayItems();
+
                 // Hide the move options for p1
                 let movesDiv = document.getElementById("player-turn-container");
                 movesDiv.style.display = 'none';
                 this.displayWinner(message);
 
+                // Hide the form, so the player cannot bet.
+                let formDiv = document.getElementById("formDiv");
+                formDiv.style.display = 'none';
+
             }
             displayMoves() {
+
                 // This function will display the Hit Button and the Stay button, and place them in the appropriate position on the dom
                 let hitBtn = this.makeHitBtn();
                 let stayBtn = this.makeStayBtn();
@@ -356,26 +385,44 @@
                 let movesDiv = document.getElementById("player-turn-container");
                 movesDiv.innerHTML = (stayBtn + hitBtn);
 
+                // make sure it is displayed.
+                movesDiv.style.display = 'inline-block';
+
             }
             displaySubmitBetInputs() {
                 // This function will display the button which will call the submit bet method, and place that button in the appropriate position in the dom.
+
+                // Firs, show the form
+                let formDiv = document.getElementById("formDiv");
+                formDiv.style.display = 'inline-block';
+
                 let submitBetInputsStr = this.makeSubmitBetInputs();
-                console.log("mark 88: submitBetInputsStr" + submitBetInputsStr);
+
                 // Now place that in the dom
                 let formLabel = document.getElementById("form-label");
                 formLabel.innerHTML = submitBetInputsStr;
 
             }
-            displayWinner(message) {
+            displayWinner(message = "") {
                 // Check to see if there is a winner
+                let messageDiv = document.getElementById("result");
+                messageDiv.innerHTML = message;
+
+                //Display a play again button
+                let btnDiv = document.getElementById("new-game")
+                let newGameBtn = this.makeNewGameBtn();
+                btnDiv.innerHTML = newGameBtn;
+
                 if (this.winner == null) {
-                    console.log("Winner is null");
+                    // No winner. Hide the winner display
+                    messageDiv.style.display = 'none';
+                    btnDiv.style.display = 'none';
+
                 } else {
-                    let messageDiv = document.getElementById("result");
-                    messageDiv.innerHTML = message;
-                    let newGamebtn = '<br><button type="button" class ="new-game-btn" onclick="newGame()">New Game</button>';
-                    messageDiv.innerHTML += newGamebtn;
-                    messageDiv.style.display = 'inline-block'
+                    // There is a winner. show the winner message and new game button.
+                    messageDiv.style.display = 'inline-block';
+
+                    btnDiv.style.display = 'inline-block';
 
                 }
 
@@ -400,7 +447,6 @@
                 let gameName = (this.name);
                 let playerName = this.player.name;
                 let btnString = ('<button type="button" onclick="' + gameName + '.hit(' + playerName + ')">Hit</button>');
-                // console.log("Mark 27: inside of the makeHitBtn(): " + btnString);
                 return btnString;
             }
             makeStayBtn() {
@@ -409,14 +455,21 @@
                 let btnString = ('<button type="button" onclick="' + gameName + '.dealerTurn()">Stay</button>');
                 return btnString;
             }
+            makeNewGameBtn() {
+
+                let gameName = (this.name);
+                let btnString = ('<button type="button" onclick="' + gameName + '.newGame()">New Game</button>');
+
+                return btnString;
+            }
             makeSubmitBetInputs() {
                 //This function will create a string for two inputs which will be placed in the form. THe first input is a number input, sn the second input is a submit button
-                let max = this.walletValue;
+                let max = this.player.walletValue;
 
                 let gameName = (this.name);
                 let numInputString = ('<input type="number" id="amount" name="amount" min="0" max="' + max + '">');
 
-                let btnInputString = ('<input class="button" name="submit" type="submit" value="submit" onclick="' + gameName + '.bet()" />');
+                let btnInputString = ('<input class="button" name="submit" type="submit" value="submit" onclick="' + gameName + '.placeBet()" />');
 
                 return (numInputString + btnInputString);
 
@@ -434,59 +487,47 @@
                 }
 
             }
+            // bet(){
+            //     this.bet = 
+            // }
             stay() {
                 alert("Now it is the dealer's turn");
                 dealerTurn();
             }
-        }
+            placeBet() {
+                let amount = document.getElementById("amount").value;
+
+                if (amount <= this.player.walletValue) {
+                    // If the bet is not too big, then update the bet and the wallet value of the player
+                    this.bet = amount;
+
+                    this.player.walletValue = (this.player.walletValue - this.bet);
 
 
-
-
-        function getFormData(player) {
-            // I need to collect this form data from the user, and then validate it. Once I do, I can place the bet. I got this idea from stackoverflow.com https://stackoverflow.com/questions/18441375/submit-form-field-values-to-a-javascript-function
-            let maxBet = player.walletValue;
-            let amount = document.getElementById("amount").value;
-
-            // validate the Data
-            console.log("Inside the getFormData function");
-            console.log("amount: " + amount);
-            console.log("maxBet: " + maxBet);
-
-            console.log(amount > maxBet);
-            if (amount > maxBet) {
-                alert("That bet is too big. You must wager an amount less than or equal to " + player.walletValue);
-            } else {
-                bet = amount;
-                placeBet(player);
+                } else {
+                    alert("That bet is too big. You must wager an amount less than or equal to " + this.player.walletValue);
+                }
+                this.displayItems();
             }
-            return;
+            displayBet() {
 
 
+
+                // Append that total to the inner html of the appropriate div
+                let betAmountDiv = document.getElementById("bet");
+                betAmountDiv.innerHTML = ("Your bet for this game is $" + this.bet + ". ");
+
+            }
+            payBet() {
+                if (this.winner == this.player) {
+                    // Place their bet and their winnings back into the wallet
+                    this.player.walletValue += 2 * this.bet;
+
+
+                }
+                return;
+            }
         }
-        // function placeBet(player) {
-        //     // Check to see if the player has enough money in their wallet
-        //     if (bet <= player.walletValue) {
-        //         player.walletValue = (player.walletValue - bet);
-        //         console.log("player.walletValue" + player.walletValue);
-        //         console.log("p1.walletValue" + p1.walletValue);
-
-        //     } else {
-        //         alert("That bet is too big. You must wager an amount less than or equal to " + player.walletValue);
-        //     }
-        //     displayWalletValue(player);
-        //     alert("mark 17: Inside of the placeBet function");
-        //     console.log("mark 13: Inside of the placeBet function");
-        //     console.log("player.walletValue" + player.walletValue);
-        //     displayBet();
-        //     console.log("Mark 19 - player.walletValue" + player.walletValue);
-
-        //     alert("mark 19: Inside of the placeBet function. after Place bet and return");
-
-        //     return;
-
-        // }
-
 
     </script>
 
@@ -536,9 +577,11 @@
 
             <div class="wallet-amount" id="wallet-player"></div>
         </div><!-- end wallet container -->
-
-        <div class="result" id="result" style="display:none">New Game</button>
-        </div>
+        <div class="results-container">
+            <div class="result" id="result" style="display:none">
+            </div>
+            <div class="btnContainer" id="new-game" style="display:none"></div>
+        </div><!-- end results-container -->
     </div><!-- end gameboard -->
 
     <script language="javascript">
