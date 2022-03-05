@@ -281,11 +281,12 @@
                 this.checkBlackJack();
             }
             displayItems() {
-                //display cards, totals, moves, and bet form for player
+                //display cards, totals, wallet, moves, and bet form for player
                 this.player.displayCards();
                 this.player.displayTotal();
                 this.player.displayWalletValue();
-                this.displayMoves()
+                this.displayMoves();
+                this.displaySubmitBetInputs();
 
                 // Display the cards and the total for the dealer
                 this.dealer.displayCards();
@@ -355,7 +356,14 @@
                 let movesDiv = document.getElementById("player-turn-container");
                 movesDiv.innerHTML = (stayBtn + hitBtn);
 
-
+            }
+            displaySubmitBetInputs() {
+                // This function will display the button which will call the submit bet method, and place that button in the appropriate position in the dom.
+                let submitBetInputsStr = this.makeSubmitBetInputs();
+                console.log("mark 88: submitBetInputsStr" + submitBetInputsStr);
+                // Now place that in the dom
+                let formLabel = document.getElementById("form-label");
+                formLabel.innerHTML = submitBetInputsStr;
 
             }
             displayWinner(message) {
@@ -401,6 +409,20 @@
                 let btnString = ('<button type="button" onclick="' + gameName + '.dealerTurn()">Stay</button>');
                 return btnString;
             }
+            makeSubmitBetInputs() {
+                //This function will create a string for two inputs which will be placed in the form. THe first input is a number input, sn the second input is a submit button
+                let max = this.walletValue;
+
+                let gameName = (this.name);
+                let numInputString = ('<input type="number" id="amount" name="amount" min="0" max="' + max + '">');
+
+                let btnInputString = ('<input class="button" name="submit" type="submit" value="submit" onclick="' + gameName + '.bet()" />');
+
+                return (numInputString + btnInputString);
+
+                // <input class="button" name="submit" type="submit" value="submit" onclick="(testGame.bet())" />
+
+            }
             hit(player) {
                 this.deck.deal(player);
                 this.displayItems();
@@ -412,15 +434,15 @@
                 }
 
             }
+            stay() {
+                alert("Now it is the dealer's turn");
+                dealerTurn();
+            }
         }
 
 
-        function stay() {
-            alert("Now it is the dealer's turn");
-            dealerTurn();
-            return;
 
-        }
+
         function getFormData(player) {
             // I need to collect this form data from the user, and then validate it. Once I do, I can place the bet. I got this idea from stackoverflow.com https://stackoverflow.com/questions/18441375/submit-form-field-values-to-a-javascript-function
             let maxBet = player.walletValue;
@@ -507,9 +529,8 @@
             <div class="bet" id="bet">Bet</div>
             <div id="formDiv">
                 <form>
-                    <label for="amount">Enter the amount you would like to bet:</label>
-                    <input type="number" id="amount" name="amount" min="0">
-                    <input class="button" name="submit" type="submit" value="submit" onclick="(getFormData(player))" />
+                    <label id="form-label" for="amount">Enter the amount you would like to bet:</label>
+
                 </form>
             </div>
 
