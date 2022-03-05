@@ -405,6 +405,12 @@
                 this.deck.deal(player);
                 this.displayItems();
 
+                // Check to see if the hand total is greater than 21.
+                if (player.totalHand() > 21) {
+                    // if the player busts, then it is time to check the winner
+                    this.checkWinner();
+                }
+
             }
         }
 
