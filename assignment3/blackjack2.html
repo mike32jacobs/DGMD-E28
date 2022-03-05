@@ -15,6 +15,7 @@
         img { 
             object-fit: contain;
             display: block;
+            width: 150px;
         }
 
         .gameboard{
@@ -280,6 +281,11 @@
                 //remove the previously displayed cards
                 cardContainerDiv.innerHTML = "";
 
+                // If the player is the dealer, insert a card div for a hidden card
+                if (this.name == "dealer") {
+                    cardContainerDiv.innerHTML = '<div class="card" id="hidden-card" style="display: none;"><img src="/images/PNG-cards-1.3/back.png" alt="This card is hidden"></div>';
+                }
+
                 // Loop through the cards in the player's hand and build a div to display each card. Place the div in the appropriate card container
                 for (let i = 0; i < this.hand.length; i++) {
                     cardContainerDiv.innerHTML += this.hand[i].makeDivTag();
@@ -342,8 +348,30 @@
                 this.startGame();
 
             }
+            hideDealerCard() {
+                if (gameOver) {
+                    // display all cards
+                    this.dealer.displayCards;
+                } else {
+                    // The game is still going on. Hide the dealer's first card.
+                    // Determine the dealer's first card, hide that div
+                    let firstCard = this.dealer.hand[0];
+                    let idString = (firstCard.name + "-of-" + firstCard.suit);
+                    let firstCardDiv = document.getElementById(idString);
+                    firstCardDiv.style.display = 'none';
+
+                    // Show the back of the card
+                    let cardBack = document.getElementById("hidden-card");
+                    cardBack.style.display = 'inline-block';
+
+                    //Hide the dealer's total from the player
+                    let totalDiv = document.getElementById("total-dealer");
+                    totalDiv.innerHTML = "Total: ?";
+
+                }
+            }
             displayItems() {
-                //display cards, totals, wallet, moves, and bet form for player
+                // Display cards, totals, wallet, moves, and bet form for player
                 this.player.displayCards();
                 this.player.displayTotal();
                 this.player.displayWalletValue();
@@ -354,11 +382,17 @@
                 // Display the cards and the total for the dealer
                 this.dealer.displayCards();
                 this.dealer.displayTotal();
+
+                // If the game is not over, then hide the dealer's first card and total
+                if (this.gameOver == false) {
+                    this.hideDealerCard();
+                }
             }
             dealerTurn() {
                 // Hide the move options for player
                 let movesDiv = document.getElementById("player-turn-container");
                 movesDiv.style.display = 'none';
+
                 // Hide the form, so the player cannot bet.
                 let formDiv = document.getElementById("formDiv");
                 formDiv.style.display = 'none';
@@ -376,6 +410,7 @@
                 let dealerScore = this.dealer.totalHand();
                 let message = "Default Message"
                 if (dealerScore > 21) {
+
                     // Dealer Busts.
                     this.winner = this.player;
                     this.gameOver = true;
@@ -567,9 +602,8 @@
             payBet() {
                 if (this.winner == this.player) {
                     // Place their bet and their winnings back into the wallet
-                    this.player.walletValue += 2 * this.bet;
 
-
+                    this.player.walletValue = (this.player.walletValue + (2 * this.bet));
                 }
                 return;
             }
