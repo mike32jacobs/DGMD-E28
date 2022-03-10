@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <title>fetch example</title>
+    <meta charset='utf-8'>
+    <link href=data: , rel=icon>
+    <style>
+        body,
+        html {
+            font-size: 30px;
+        }
+    </style>
+    <script language="javascript">
+        var hometown;
+        var hometown2;
+        async function getTown() {
+            res = await fetch("http://api.zippopotam.us/us/03894")
+            data = await res.text();
+            data = JSON.parse(data);
+            hometown = data["places"][0]["place name"];
+            console.log("Mark 3" + hometown);;
+        }
+        console.log("Mark 4 " + hometown);
+    </script>
+</head>
+
+
+<body>
+    <h1>This is a class example from March 2</h1>
+    <ul>
+
+        <li>Go to <a href="http://e28a2.nhroyal.com/" target="_blank">Assignment 2 Index</a></li>
+
+        <li>Go to <a href="http://e28a3.nhroyal.com/" target="_blank">Assignment 3 Index</a></li>
+
+
+    </ul>
+    <script language="javascript">
+
+        // var req = new XMLHttpRequest();
+        // req.open("GET", "http://api.zippopotam.us/us/02145", true);
+        // req.onreadystatechange = function () {
+        //     if (req.readyState == 4) {
+        //         console.log(req.responseText);
+        //         result = req.responseText;
+        //         data2 = JSON.parse(result)
+        //         console.log(data2["places"][0]["place name"])
+
+
+        //     };
+        // };
+        // req.send();
+
+
+        // Now I will do the same thing using a fetch
+
+        // res = fetch("http://api.zippopotam.us/us/03894")
+        //     .then(res => res.text())
+        //     .then(data => {
+        //         console.log("Mark 1: data" + data)
+        //         data2 = JSON.parse(data)
+        //         console.log(data2["places"][0]["place name"])
+        //         hometown2 = data2["places"][0]["place name"]
+        //     })
+        //     .catch(error => console.log(error))
+
+        // document.write(hometown2);
+        getTown();
+    </script>
+
+
+
+</body>
+
+</html>
