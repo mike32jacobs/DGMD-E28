@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <title>Promises</title>
+    <meta charset='utf-8'>
+    <link href=data: , rel=icon>
+    <style>
+        body,
+        html {
+            font-size: 30px;
+        }
+    </style>
+    <script language="javascript">
+        // x = [1, 4, 6, 33, 7, 2, 101]
+        // document.write(x.join(' ') + "<br>")
+
+        // y = x.filter(item => item < 30)
+        // document.write(y.join(' ') + "<br>")
+        // document.write(x.join(' ') + "<br>")
+
+        // sum = x.reduce((n, item) => n + item, 0);
+        // document.write(x.join(' ') + "<br>")
+        // document.write(sum + "<br>")
+
+        function Product(name, inStock) {
+            this.name = name;
+            this.amount = inStock;
+            this.show = function () {
+                return "Product name: " + this.name + " Quantity in stock: " + this.amount;
+            }
+        }
+        // p1 = new Product("thing", 10);
+        writeLine = (s) => document.write(s + "<hr>");
+        // document.write(p1.show());
+        // writeLine("hello");
+
+
+        // writeLine(p1.s());
+        inventory = [new Product("Thing", 10),
+        new Product("stuff", 12),
+        new Product("widget", 1),
+        new Product("dust", 0),
+        new Product("car", 10000),];
+
+        inventory.forEach((p) => writeLine(p.show()));
+
+        // inventory_instock = inventory.filter(function(p){return p.amount >=0})
+        inventory_instock = inventory.filter((p) => p.amount > 9)
+        inventory_instock.forEach((p) => writeLine(p.show()));
+
+        newInventory = inventory_instock.map((p) => p.show());
+
+        document.write("<hr>");
+
+        document.write("Mark 1");
+        newInventory.join(("<hr>"));
+        document.write(newInventory);
+
+        document.write(
+            inventory.filter((p) => p.amount > 0)
+                .map((p) => p.show())
+                .join("<hr>")
+        )
+
+        // Now Reduce
+        document.write("Mark 2:  Reduce");
+        reducedValue = inventory.reduce((sum, p) => sum + p.amount, 0)
+        document.write("Mark 3:  reducedValue" + reducedValue);
+
+
+
+    </script>
+</head>
+<h1>Class example for functional programming</h1>
+
+
+<body>
+
+    <script language="javascript">
+
+    </script>
+
+
+
+</body>
+
+</html>
